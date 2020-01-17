@@ -13,7 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 public class EventEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

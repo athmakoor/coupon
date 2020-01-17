@@ -44,7 +44,7 @@ public class CartServiceImpl implements CartService {
         response.setTxnId(cartRequest.getTxnId());
         response.setStatus("success");
         response.setMessage("ok");
-        response.setStatusCode(2000);
+        response.setStatus_code(2000);
 
         return response;
     }
@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
         List<String> types = new ArrayList<>();
 
 
-        for (CartItem cartItem : cartRequest.getCartData()) {
+        for (CartItem cartItem : cartRequest.getCart_data()) {
             if (types.indexOf(cartItem.getCategory()) == -1) {
                 types.add(cartItem.getCategory());
             }
@@ -62,7 +62,7 @@ public class CartServiceImpl implements CartService {
 
         List<RulesDetailsEntity> rules = rulesDetailsRepository.findByTypeAndItemNameIn("discount", types);
         List<DiscountDetailsTableEntity> discounts = new ArrayList<>();
-        List<ConversionDataEntity> userConversions = conversionDataRepository.findByUserId(cartRequest.getUserData().getUserId());
+        List<ConversionDataEntity> userConversions = conversionDataRepository.findByUserId(cartRequest.getUser_data().getUser_id());
         Integer length = userConversions.size();
         Map<String, List<RulesDetailsEntity>> rulesCodeMap = new HashMap<>();
         List<RulesDetailsEntity> discountRules;
@@ -117,14 +117,14 @@ public class CartServiceImpl implements CartService {
         List<String> types = new ArrayList<>();
 
 
-        for (CartItem cartItem : cartRequest.getCartData()) {
+        for (CartItem cartItem : cartRequest.getCart_data()) {
             if (types.indexOf(cartItem.getCategory()) == -1) {
                 types.add(cartItem.getCategory());
             }
         }
         List<RulesDetailsEntity> rules = rulesDetailsRepository.findByTypeAndItemNameIn("coupon", types);
         List<CouponDetailsTableEntity> coupons = new ArrayList<>();
-        List<ConversionDataEntity> userConversions = conversionDataRepository.findByUserId(cartRequest.getUserData().getUserId());
+        List<ConversionDataEntity> userConversions = conversionDataRepository.findByUserId(cartRequest.getUser_data().getUser_id());
         Integer length = userConversions.size();
         Map<String, List<RulesDetailsEntity>> rulesCodeMap = new HashMap<>();
         List<RulesDetailsEntity> couponRules;

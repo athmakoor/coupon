@@ -62,11 +62,11 @@ public class ConverstionCartDataEntity implements Serializable {
         Date date = new Date();
         this.amount = item.getAmount();
         this.category = item.getCategory();
-        this.itemName = item.getItemName();
+        this.itemName = item.getItem_name();
         this.quantity = item.getQuantity();
         this.type = item.getType();
-        this.txnId = data.getTxnId();
-        this.userId = data.getConversionData().getUserId();
+        this.txnId = data.getTxn_id();
+        this.userId = data.getConversion_data().getUser_id();
         this.insertedDate = date;
         this.insertedTime = date;
     }

@@ -3,18 +3,18 @@ package com.coupon.bean;
 import java.io.Serializable;
 
 public class ConversionData implements Serializable {
-    private String userId;
+    private String user_id;
     private String type;
     private String code;
     private Double value;
-    private Double invoiceAmount;
+    private Double invoice_amount;
 
-    public String getUserId() {
-        return userId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getType() {
@@ -41,11 +41,11 @@ public class ConversionData implements Serializable {
         this.value = value;
     }
 
-    public Double getInvoiceAmount() {
-        return invoiceAmount;
+    public Double getInvoice_amount() {
+        return invoice_amount;
     }
 
-    public void setInvoiceAmount(Double invoiceAmount) {
-        this.invoiceAmount = invoiceAmount;
+    public void setInvoice_amount(Double invoice_amount) {
+        this.invoice_amount = invoice_amount;
     }
 }

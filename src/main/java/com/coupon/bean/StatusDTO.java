@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class StatusDTO implements Serializable {
     private String status;
-    private Integer statusCode;
+    private Integer status_code;
     private String description;
 
     public StatusDTO (Integer statusCode, String status, String description) {
         super();
         this.status = status;
-        this.statusCode = statusCode;
+        this.status_code = statusCode;
         this.description = description;
     }
 
@@ -22,12 +22,12 @@ public class StatusDTO implements Serializable {
         this.status = status;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getStatus_code() {
+        return status_code;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus_code(Integer status_code) {
+        this.status_code = status_code;
     }
 
     public String getDescription() {

@@ -28,7 +28,7 @@ public class ConversionServiceImpl implements ConversionService {
         ConversionDataEntity conversionDataEntity = new ConversionDataEntity(data);
         List<ConverstionCartDataEntity> converstionCartDataEntities = new ArrayList<>();
 
-        for (CartItem item : data.getCartData()) {
+        for (CartItem item : data.getCart_data()) {
             converstionCartDataEntities.add(new ConverstionCartDataEntity(item,data));
         }
 
@@ -37,7 +37,7 @@ public class ConversionServiceImpl implements ConversionService {
 
         ConversionResponse response = new ConversionResponse();
         response.setStatus("success");
-        response.setTxnId(data.getTxnId());
+        response.setTxn_id(data.getTxn_id());
 
         return response;
     }

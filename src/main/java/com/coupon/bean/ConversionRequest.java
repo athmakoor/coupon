@@ -4,18 +4,18 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ConversionRequest implements Serializable {
-    private String txnId;
+    private String txn_id;
     private String msg;
-    private String statusCode;
-    private ConversionData conversionData;
-    private List<CartItem> cartData;
+    private String status_code;
+    private ConversionData conversion_data;
+    private List<CartItem> cart_data;
 
-    public String getTxnId() {
-        return txnId;
+    public String getTxn_id() {
+        return txn_id;
     }
 
-    public void setTxnId(String txnId) {
-        this.txnId = txnId;
+    public void setTxn_id(String txn_id) {
+        this.txn_id = txn_id;
     }
 
     public String getMsg() {
@@ -26,27 +26,27 @@ public class ConversionRequest implements Serializable {
         this.msg = msg;
     }
 
-    public String getStatusCode() {
-        return statusCode;
+    public String getStatus_code() {
+        return status_code;
     }
 
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus_code(String status_code) {
+        this.status_code = status_code;
     }
 
-    public ConversionData getConversionData() {
-        return conversionData;
+    public ConversionData getConversion_data() {
+        return conversion_data;
     }
 
-    public void setConversionData(ConversionData conversionData) {
-        this.conversionData = conversionData;
+    public void setConversion_data(ConversionData conversion_data) {
+        this.conversion_data = conversion_data;
     }
 
-    public List<CartItem> getCartData() {
-        return cartData;
+    public List<CartItem> getCart_data() {
+        return cart_data;
     }
 
-    public void setCartData(List<CartItem> cartData) {
-        this.cartData = cartData;
+    public void setCart_data(List<CartItem> cart_data) {
+        this.cart_data = cart_data;
     }
 }

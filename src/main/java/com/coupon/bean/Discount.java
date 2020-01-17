@@ -8,7 +8,7 @@ public class Discount implements Serializable {
     private String code;
     private String description;
     private Double discount;
-    private Double maxDiscountAmount;
+    private Double max_discount_amount;
 
     public Discount () {
         super();
@@ -19,7 +19,7 @@ public class Discount implements Serializable {
         this.code = entity.getDiscountDesc();
         this.description = entity.getDiscountDesc();
         this.discount = entity.getDiscountPercentage();
-        this.maxDiscountAmount = entity.getMaxDiscountAmt();
+        this.max_discount_amount = entity.getMaxDiscountAmt();
     }
 
     public String getCode() {
@@ -46,11 +46,11 @@ public class Discount implements Serializable {
         this.discount = discount;
     }
 
-    public Double getMaxDiscountAmount() {
-        return maxDiscountAmount;
+    public Double getMax_discount_amount() {
+        return max_discount_amount;
     }
 
-    public void setMaxDiscountAmount(Double maxDiscountAmount) {
-        this.maxDiscountAmount = maxDiscountAmount;
+    public void setMax_discount_amount(Double max_discount_amount) {
+        this.max_discount_amount = max_discount_amount;
     }
 }

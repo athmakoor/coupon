@@ -12,8 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "event_field")
-public class EventFieldEntity implements Serializable {
+@Table(name = "event_fields")
+public class EventFieldsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

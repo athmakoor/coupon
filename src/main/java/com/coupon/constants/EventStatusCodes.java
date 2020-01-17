@@ -12,6 +12,7 @@ public class EventStatusCodes {
         VALUES = new HashMap<>();
         VALUES.put(2000, new StatusDTO(2000, "success", "processed successfully"));
         VALUES.put(3100, new StatusDTO(3100, "error", "Invalid field values"));
+        VALUES.put(3101, new StatusDTO(3101, "error", "Invalid event code"));
         VALUES.put(3102, new StatusDTO(3102, "error", "Mandatory field, event code missing"));
         VALUES.put(3103, new StatusDTO(3103, "error", "Mandatory event field %fields% missing"));
         VALUES.put(3104, new StatusDTO(3104, "error", "Duplicate transaction id"));

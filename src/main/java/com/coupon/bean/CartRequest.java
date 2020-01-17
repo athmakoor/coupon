@@ -6,8 +6,8 @@ import java.util.List;
 public class CartRequest implements Serializable {
     private String txnId;
     private List<String> fields;
-    private UserData userData;
-    private List<CartItem> cartData;
+    private UserData user_data;
+    private List<CartItem> cart_data;
 
     public String getTxnId() {
         return txnId;
@@ -25,19 +25,19 @@ public class CartRequest implements Serializable {
         this.fields = fields;
     }
 
-    public UserData getUserData() {
-        return userData;
+    public UserData getUser_data() {
+        return user_data;
     }
 
-    public void setUserData(UserData userData) {
-        this.userData = userData;
+    public void setUser_data(UserData user_data) {
+        this.user_data = user_data;
     }
 
-    public List<CartItem> getCartData() {
-        return cartData;
+    public List<CartItem> getCart_data() {
+        return cart_data;
     }
 
-    public void setCartData(List<CartItem> cartData) {
-        this.cartData = cartData;
+    public void setCart_data(List<CartItem> cart_data) {
+        this.cart_data = cart_data;
     }
 }

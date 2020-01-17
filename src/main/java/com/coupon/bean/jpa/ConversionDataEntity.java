@@ -69,17 +69,17 @@ public class ConversionDataEntity implements Serializable {
 
     public ConversionDataEntity(ConversionRequest data) {
         Date date = new Date();
-        this.code = data.getConversionData().getCode();
+        this.code = data.getConversion_data().getCode();
         this.insertedDate = date;
         this.insertedTime = date;
         this.msg = data.getMsg();
-        this.invoiceAmount = data.getConversionData().getInvoiceAmount();
-        this.value = data.getConversionData().getValue();
-        this.type = data.getConversionData().getType();
+        this.invoiceAmount = data.getConversion_data().getInvoice_amount();
+        this.value = data.getConversion_data().getValue();
+        this.type = data.getConversion_data().getType();
         this.status = Status.success;
-        this.statusCode = data.getStatusCode();
-        this.userId = data.getConversionData().getUserId();
-        this.txnId = data.getTxnId();
+        this.statusCode = data.getStatus_code();
+        this.userId = data.getConversion_data().getUser_id();
+        this.txnId = data.getTxn_id();
     }
 
     public Integer getId() {

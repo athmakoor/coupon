@@ -6,13 +6,13 @@ import com.coupon.bean.StatusDTO;
 
 public class EventResponse implements Serializable {
     private String status;
-    private Integer statusCode;
+    private Integer status_code;
     private String msg;
 
     public EventResponse(StatusDTO statusDTO) {
         super();
         this.status = statusDTO.getStatus();
-        this.statusCode =statusDTO.getStatusCode();
+        this.status_code =statusDTO.getStatus_code();
         this.msg = statusDTO.getDescription();
     }
 
@@ -28,12 +28,12 @@ public class EventResponse implements Serializable {
         this.status = status;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getStatus_code() {
+        return status_code;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus_code(Integer status_code) {
+        this.status_code = status_code;
     }
 
     public String getMsg() {

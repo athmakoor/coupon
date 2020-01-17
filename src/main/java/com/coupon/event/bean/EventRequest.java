@@ -5,33 +5,33 @@ import java.util.List;
 import java.util.Map;
 
 public class EventRequest implements Serializable {
-    private String userId;
-    private String eventCode;
-    private String txnId;
+    private String user_id;
+    private String event_code;
+    private String txn_id;
     private List<Map<String, Object>> fields;
 
-    public String getUserId() {
-        return userId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public String getEventCode() {
-        return eventCode;
+    public String getEvent_code() {
+        return event_code;
     }
 
-    public String getTxnId() {
-        return txnId;
+    public String getTxn_id() {
+        return txn_id;
     }
 
-    public void setTxnId(String txnId) {
-        this.txnId = txnId;
+    public void setTxn_id(String txn_id) {
+        this.txn_id = txn_id;
     }
 
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
+    public void setEvent_code(String event_code) {
+        this.event_code = event_code;
     }
 
     public List<Map<String, Object>> getFields() {

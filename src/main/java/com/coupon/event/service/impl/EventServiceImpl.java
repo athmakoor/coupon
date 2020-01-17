@@ -16,9 +16,9 @@ import com.coupon.constants.EventStatusCodes;
 import com.coupon.event.bean.EventRequest;
 import com.coupon.event.bean.EventResponse;
 import com.coupon.event.bean.jpa.EventEntity;
-import com.coupon.event.bean.jpa.EventFieldEntity;
-import com.coupon.event.bean.jpa.StaticCustomEventEntity;
-import com.coupon.event.bean.jpa.StaticEventFieldEntity;
+import com.coupon.event.bean.jpa.EventFieldsEntity;
+import com.coupon.event.bean.jpa.CustomEventsEntity;
+import com.coupon.event.bean.jpa.CustomEventFieldEntity;
 import com.coupon.event.constants.EventStatus;
 import com.coupon.event.constants.EventType;
 import com.coupon.event.repository.EventFieldRepository;
@@ -41,17 +41,17 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventResponse saveEvent(EventRequest eventRequest) {
-        if (eventRequest.getEventCode() == null) {
+        if (eventRequest.getEvent_code() == null) {
             return new EventResponse(EventStatusCodes.VALUES.get(EventStatusCodes.EVENT_CODE_MISSING));
         }
 
-        if (!eventRepository.findByTxnId(eventRequest.getTxnId()).isEmpty()) {
+        if (!eventRepository.findByTxnId(eventRequest.getTxn_id()).isEmpty()) {
             return new EventResponse(EventStatusCodes.VALUES.get(EventStatusCodes.DUPLICATE_TRANSACTION_ID));
         }
 
-        Map<String, StaticCustomEventEntity> staticCustomEventEntityMap = getStaticEventsAsMap();
-        Iterable<StaticEventFieldEntity> staticEventFieldEntities = staticEventFieldRepository.findByEventCodeRefAndStatus(eventRequest.getEventCode(), EventStatus.active);
-        Map<String, StaticEventFieldEntity> mandatoryStaticFields = getMandatoryStaticEventFieldsAsMap(staticEventFieldEntities);
+        Map<String, CustomEventsEntity> staticCustomEventEntityMap = getStaticEventsAsMap();
+        Iterable<CustomEventFieldEntity> staticEventFieldEntities = staticEventFieldRepository.findByEventCodeRefAndStatus(eventRequest.getEvent_code(), EventStatus.active);
+        Map<String, CustomEventFieldEntity> mandatoryStaticFields = getMandatoryStaticEventFieldsAsMap(staticEventFieldEntities);
         EventResponse response = new EventResponse(EventStatusCodes.VALUES.get(EventStatusCodes.SUCCESS));
         List<String> missingFields = checkAllMandatoryFields(eventRequest.getFields(), mandatoryStaticFields);
 
@@ -67,17 +67,17 @@ public class EventServiceImpl implements EventService {
 
 
 
-        if (!staticCustomEventEntityMap.containsKey(eventRequest.getEventCode())) {
+        if (!staticCustomEventEntityMap.containsKey(eventRequest.getEvent_code())) {
             return new EventResponse(EventStatusCodes.VALUES.get(EventStatusCodes.INVALID_EVENT_CODE));
         }
 
         EventEntity eventEntity = new EventEntity();
-        eventEntity.setEventCode(eventRequest.getEventCode());
-        eventEntity.setTxnId(eventRequest.getTxnId());
-        eventEntity.setUserId(eventRequest.getUserId());
+        eventEntity.setEventCode(eventRequest.getEvent_code());
+        eventEntity.setTxnId(eventRequest.getTxn_id());
+        eventEntity.setUserId(eventRequest.getUser_id());
 
-        EventFieldEntity eventFieldEntity;
-        List<EventFieldEntity> eventFieldEntityList = new ArrayList<>();
+        EventFieldsEntity eventFieldEntity;
+        List<EventFieldsEntity> eventFieldEntityList = new ArrayList<>();
 
         EventEntity savedEventEntity = eventRepository.save(eventEntity);
         EventEntity tempEntity = new EventEntity();
@@ -94,7 +94,7 @@ public class EventServiceImpl implements EventService {
                     response = new EventResponse(EventStatusCodes.VALUES.get(EventStatusCodes.INVALID_FIELD_VALUES));
                 }
 
-                eventFieldEntity = new EventFieldEntity();
+                eventFieldEntity = new EventFieldsEntity();
                 eventFieldEntity.setFieldName(entry.getKey());
                 eventFieldEntity.setFieldValue(entry.getValue().toString());
                 eventFieldEntity.setIdRef(tempEntity);
@@ -109,7 +109,7 @@ public class EventServiceImpl implements EventService {
         return response;
     }
 
-    private List<String> checkAllMandatoryFields(List<Map<String, Object>> fields, Map<String, StaticEventFieldEntity> mandatoryStaticFields) {
+    private List<String> checkAllMandatoryFields(List<Map<String, Object>> fields, Map<String, CustomEventFieldEntity> mandatoryStaticFields) {
         List<String> missingFields = new ArrayList<>();
         List<String> fieldNamesSent = new ArrayList<>();
 
@@ -126,21 +126,21 @@ public class EventServiceImpl implements EventService {
         return missingFields;
     }
 
-    private Map<String, StaticCustomEventEntity> getStaticEventsAsMap () {
-        Iterable<StaticCustomEventEntity> staticCustomEventEntities = staticCustomEventRepository.findByStatus(EventStatus.active);
-        Map<String, StaticCustomEventEntity> map = new HashMap<>();
+    private Map<String, CustomEventsEntity> getStaticEventsAsMap () {
+        Iterable<CustomEventsEntity> staticCustomEventEntities = staticCustomEventRepository.findByStatus(EventStatus.active);
+        Map<String, CustomEventsEntity> map = new HashMap<>();
 
-        for (StaticCustomEventEntity entity : staticCustomEventEntities) {
+        for (CustomEventsEntity entity : staticCustomEventEntities) {
             map.put(entity.getEventCode(), entity);
         }
 
         return map;
     }
 
-    private Map<String, StaticEventFieldEntity> getMandatoryStaticEventFieldsAsMap (Iterable<StaticEventFieldEntity> staticEventFieldEntities) {
-        Map<String, StaticEventFieldEntity> map = new HashMap<>();
+    private Map<String, CustomEventFieldEntity> getMandatoryStaticEventFieldsAsMap (Iterable<CustomEventFieldEntity> staticEventFieldEntities) {
+        Map<String, CustomEventFieldEntity> map = new HashMap<>();
 
-        for (StaticEventFieldEntity entity : staticEventFieldEntities) {
+        for (CustomEventFieldEntity entity : staticEventFieldEntities) {
             if (entity.getMandatory()) {
                 map.put(entity.getFieldName(), entity);
             }
@@ -151,11 +151,11 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    private Boolean validateFieldValue (String fieldName, Object fieldValue, Iterable<StaticEventFieldEntity> staticEvents) {
+    private Boolean validateFieldValue (String fieldName, Object fieldValue, Iterable<CustomEventFieldEntity> staticEvents) {
         Boolean valid = false;
         EventType eventType;
 
-        for (StaticEventFieldEntity entity : staticEvents) {
+        for (CustomEventFieldEntity entity : staticEvents) {
             if (entity.getFieldName().equals(fieldName)) {
                 eventType = entity.getType();
 

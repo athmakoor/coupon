@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class CartItem implements Serializable {
     private String category;
     private String type;
-    private String itemName;
+    private String item_name;
     private Double amount;
     private Integer quantity;
 
@@ -25,12 +25,12 @@ public class CartItem implements Serializable {
         this.type = type;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getItem_name() {
+        return item_name;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setItem_name(String item_name) {
+        this.item_name = item_name;
     }
 
     public Double getAmount() {

@@ -18,8 +18,8 @@ import com.coupon.event.constants.EventStatus;
 import com.coupon.event.constants.EventType;
 
 @Entity
-@Table(name = "static_event_field")
-public class StaticEventFieldEntity implements Serializable {
+@Table(name = "custom_event_fields")
+public class CustomEventFieldEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

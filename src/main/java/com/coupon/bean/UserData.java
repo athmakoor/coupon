@@ -3,18 +3,18 @@ package com.coupon.bean;
 import java.io.Serializable;
 
 public class UserData implements Serializable {
-    private String userId;
+    private String user_id;
     private String gender;
     private String country;
-    private String referCode;
-    private String userType;
+    private String refer_code;
+    private String user_type;
 
-    public String getUserId() {
-        return userId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getGender() {
@@ -33,19 +33,19 @@ public class UserData implements Serializable {
         this.country = country;
     }
 
-    public String getReferCode() {
-        return referCode;
+    public String getRefer_code() {
+        return refer_code;
     }
 
-    public void setReferCode(String referCode) {
-        this.referCode = referCode;
+    public void setRefer_code(String refer_code) {
+        this.refer_code = refer_code;
     }
 
-    public String getUserType() {
-        return userType;
+    public String getUser_type() {
+        return user_type;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
     }
 }

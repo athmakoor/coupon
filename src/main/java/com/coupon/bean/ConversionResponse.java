@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ConversionResponse implements Serializable {
     private String status;
-    private String txnId;
+    private String txn_id;
 
     public String getStatus() {
         return status;
@@ -14,11 +14,11 @@ public class ConversionResponse implements Serializable {
         this.status = status;
     }
 
-    public String getTxnId() {
-        return txnId;
+    public String getTxn_id() {
+        return txn_id;
     }
 
-    public void setTxnId(String txnId) {
-        this.txnId = txnId;
+    public void setTxn_id(String txn_id) {
+        this.txn_id = txn_id;
     }
 }

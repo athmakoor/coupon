@@ -6,12 +6,12 @@ import java.util.List;
 public class CartResponse implements Serializable {
     private String status;
     private String message;
-    private Integer statusCode;
+    private Integer status_code;
     private String txnId;
     private List<Coupon> coupons;
     private List<Discount> discounts;
     private List<Referral> referrals;
-    private List<LoyalityPoint> loyalityPoints;
+    private List<LoyalityPoint> loyality_points;
 
     public String getStatus() {
         return status;
@@ -29,12 +29,12 @@ public class CartResponse implements Serializable {
         this.message = message;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getStatus_code() {
+        return status_code;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus_code(Integer status_code) {
+        this.status_code = status_code;
     }
 
     public String getTxnId() {
@@ -69,11 +69,11 @@ public class CartResponse implements Serializable {
         this.referrals = referrals;
     }
 
-    public List<LoyalityPoint> getLoyalityPoints() {
-        return loyalityPoints;
+    public List<LoyalityPoint> getLoyality_points() {
+        return loyality_points;
     }
 
-    public void setLoyalityPoints(List<LoyalityPoint> loyalityPoints) {
-        this.loyalityPoints = loyalityPoints;
+    public void setLoyality_points(List<LoyalityPoint> loyality_points) {
+        this.loyality_points = loyality_points;
     }
 }

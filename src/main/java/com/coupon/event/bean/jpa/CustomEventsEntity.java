@@ -17,8 +17,8 @@ import javax.persistence.TemporalType;
 import com.coupon.event.constants.EventStatus;
 
 @Entity
-@Table(name = "static_custom_event")
-public class StaticCustomEventEntity implements Serializable {
+@Table(name = "custom_events")
+public class CustomEventsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
