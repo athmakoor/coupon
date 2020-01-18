@@ -43,6 +43,12 @@ public class RuleCalendarMappingEntity implements Serializable {
     @Column(name = "type_to")
     private String typeTo;
 
+    @Column(name = "limit_per_user")
+    private Integer limitPerUser;
+
+    @Column(name = "coupon_limit")
+    private Integer couponLimit;
+
     @Column(name = "relation")
     @Enumerated(EnumType.STRING)
     private Relation relation;
@@ -93,6 +99,22 @@ public class RuleCalendarMappingEntity implements Serializable {
 
     public void setTypeTo(String typeTo) {
         this.typeTo = typeTo;
+    }
+
+    public Integer getLimitPerUser() {
+        return limitPerUser;
+    }
+
+    public void setLimitPerUser(Integer limitPerUser) {
+        this.limitPerUser = limitPerUser;
+    }
+
+    public Integer getCouponLimit() {
+        return couponLimit;
+    }
+
+    public void setCouponLimit(Integer couponLimit) {
+        this.couponLimit = couponLimit;
     }
 
     public Relation getRelation() {

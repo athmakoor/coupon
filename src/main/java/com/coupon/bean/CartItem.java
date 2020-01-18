@@ -3,11 +3,20 @@ package com.coupon.bean;
 import java.io.Serializable;
 
 public class CartItem implements Serializable {
+    private String sku;
     private String category;
     private String type;
     private String item_name;
     private Double amount;
     private Integer quantity;
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
 
     public String getCategory() {
         return category;
@@ -42,6 +51,10 @@ public class CartItem implements Serializable {
     }
 
     public Integer getQuantity() {
+        if (quantity == null) {
+            return 1;
+        }
+
         return quantity;
     }
 

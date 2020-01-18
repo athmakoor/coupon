@@ -1,12 +1,17 @@
 package com.coupon.bean;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.coupon.bean.jpa.CouponCodeLanguageMappingEntity;
+import com.coupon.bean.jpa.CouponDescriptionLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponEntity;
 
 public class Coupon implements Serializable {
-    private String code;
-    private String description;
+    private Map<String, String> code = new HashMap<>();
+    private Map<String, String> description = new HashMap<>();
     private Double amount;
 
     public Coupon () {
@@ -15,24 +20,33 @@ public class Coupon implements Serializable {
 
     public Coupon (CouponEntity entity) {
         super();
-        /*this.code = entity.getCouponCode();
-        this.description = entity.getCouponDesc();
-        this.amount = entity.getCouponValue();*/
+        List<CouponCodeLanguageMappingEntity> codes = entity.getListOfCouponCodes();
+        List<CouponDescriptionLanguageMappingEntity> descs = entity.getListOfCouponDesc();
+
+        for (CouponCodeLanguageMappingEntity code : codes) {
+            this.code.put(code.getLanguage().name(), code.getCouponCode());
+        }
+
+        for (CouponDescriptionLanguageMappingEntity desc : descs) {
+            this.description.put(desc.getLanguage().name(), desc.getCouponDesc());
+        }
+
+        this.amount = entity.getMaxDiscount();
     }
 
-    public String getCode() {
+    public Map<String, String> getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Map<String, String> code) {
         this.code = code;
     }
 
-    public String getDescription() {
+    public Map<String, String> getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(Map<String, String> description) {
         this.description = description;
     }
 

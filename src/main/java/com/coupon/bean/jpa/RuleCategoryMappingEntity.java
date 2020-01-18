@@ -29,7 +29,7 @@ public class RuleCategoryMappingEntity implements Serializable {
     private String categoryName;
 
     @Column(name = "quantity", nullable = false)
-    private String quantity;
+    private Integer quantity;
 
     public Integer getId() {
         return id;
@@ -55,11 +55,11 @@ public class RuleCategoryMappingEntity implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }
