@@ -2,7 +2,7 @@ package com.coupon.bean;
 
 import java.io.Serializable;
 
-import com.coupon.bean.jpa.CouponDetailsTableEntity;
+import com.coupon.bean.jpa.CouponEntity;
 
 public class Coupon implements Serializable {
     private String code;
@@ -13,11 +13,11 @@ public class Coupon implements Serializable {
         super();
     }
 
-    public Coupon (CouponDetailsTableEntity entity) {
+    public Coupon (CouponEntity entity) {
         super();
-        this.code = entity.getCouponCode();
+        /*this.code = entity.getCouponCode();
         this.description = entity.getCouponDesc();
-        this.amount = entity.getCouponValue();
+        this.amount = entity.getCouponValue();*/
     }
 
     public String getCode() {

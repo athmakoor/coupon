@@ -2,8 +2,6 @@ package com.coupon.bean;
 
 import java.io.Serializable;
 
-import com.coupon.bean.jpa.DiscountDetailsTableEntity;
-
 public class Discount implements Serializable {
     private String code;
     private String description;
@@ -12,14 +10,6 @@ public class Discount implements Serializable {
 
     public Discount () {
         super();
-    }
-
-    public Discount (DiscountDetailsTableEntity entity) {
-        super();
-        this.code = entity.getDiscountDesc();
-        this.description = entity.getDiscountDesc();
-        this.discount = entity.getDiscountPercentage();
-        this.max_discount_amount = entity.getMaxDiscountAmt();
     }
 
     public String getCode() {
