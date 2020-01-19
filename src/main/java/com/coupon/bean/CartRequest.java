@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.attribute.AttributeSet;
+
 public class CartRequest implements Serializable {
     private String txn_id;
     private List<String> fields;
@@ -127,5 +129,26 @@ public class CartRequest implements Serializable {
         }
 
         return categoryMap;
+    }
+
+    public Map<String, Double> gePaymentTypeCartPriceMap() {
+        Map<String, Double> priceMap = new HashMap<>();
+        Double price;
+        String type;
+
+        for (CartItem item : cart_data) {
+            price = item.getAmount();
+            type = item.getType();
+
+            if (price != null && type != null) {
+                if (!priceMap.containsKey(type)) {
+                    priceMap.put(type, 0.0);
+                }
+
+                priceMap.put(type, priceMap.get(type) + item.getAmount() * item.getQuantity());
+            }
+        }
+
+        return priceMap;
     }
 }

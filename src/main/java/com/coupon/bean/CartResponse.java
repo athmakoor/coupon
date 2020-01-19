@@ -1,6 +1,7 @@
 package com.coupon.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartResponse implements Serializable {
@@ -8,10 +9,9 @@ public class CartResponse implements Serializable {
     private String message;
     private Integer status_code;
     private String txnId;
-    private List<Coupon> coupons;
-    private List<Discount> discounts;
+    private List<Coupon> coupons = new ArrayList<>();
+    private List<Coupon> discounts = new ArrayList<>();
     private List<Referral> referrals;
-    private List<LoyalityPoint> loyality_points;
 
     public String getStatus() {
         return status;
@@ -53,11 +53,11 @@ public class CartResponse implements Serializable {
         this.coupons = coupons;
     }
 
-    public List<Discount> getDiscounts() {
+    public List<Coupon> getDiscounts() {
         return discounts;
     }
 
-    public void setDiscounts(List<Discount> discounts) {
+    public void setDiscounts(List<Coupon> discounts) {
         this.discounts = discounts;
     }
 
@@ -69,11 +69,13 @@ public class CartResponse implements Serializable {
         this.referrals = referrals;
     }
 
-    public List<LoyalityPoint> getLoyality_points() {
-        return loyality_points;
-    }
-
-    public void setLoyality_points(List<LoyalityPoint> loyality_points) {
-        this.loyality_points = loyality_points;
+    public void setCouponsAndDiscounts(List<Coupon> coupons) {
+        for (Coupon coupon : coupons) {
+            if (coupon.getIs_manual()) {
+                this.coupons.add(coupon);
+            } else {
+                this.discounts.add(coupon);
+            }
+        }
     }
 }

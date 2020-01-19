@@ -10,8 +10,11 @@ import com.coupon.bean.CartRequest;
 import com.coupon.bean.CartResponse;
 import com.coupon.bean.ConversionRequest;
 import com.coupon.bean.ConversionResponse;
+import com.coupon.bean.CreateUserRequest;
+import com.coupon.bean.CreateUserResponse;
 import com.coupon.service.CartService;
 import com.coupon.service.ConversionService;
+import com.coupon.service.UserService;
 
 @RestController
 public class ApiController {
@@ -19,6 +22,8 @@ public class ApiController {
 	private CartService cartService;
 	@Resource
 	private ConversionService conversionService;
+	@Resource
+	private UserService userService;
 
 	@PostMapping("/checkoutapi")
 	CartResponse requestInfo(@RequestBody final CartRequest requestBody) {
@@ -28,5 +33,10 @@ public class ApiController {
 	@PostMapping("/conversionapi")
 	ConversionResponse saveCart(@RequestBody final ConversionRequest requestBody) {
 		return conversionService.saveConversions(requestBody);
+	}
+
+	@PostMapping("/createuser")
+	CreateUserResponse createUser(@RequestBody final CreateUserRequest requestBody) {
+		return userService.createUser(requestBody);
 	}
 }

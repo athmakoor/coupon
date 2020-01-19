@@ -1,6 +1,5 @@
 package com.coupon.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -48,7 +47,7 @@ public class CartServiceImpl implements CartService {
     public CartResponse getCartResponse(CartRequest cartRequest) {
         CartResponse response = new CartResponse();
 
-        response.setCoupons(getCoupons(cartRequest));
+        response.setCouponsAndDiscounts(getCoupons(cartRequest));
         response.setTxnId(cartRequest.getTxn_id());
         response.setStatus("success");
         response.setMessage("ok");
@@ -68,15 +67,66 @@ public class CartServiceImpl implements CartService {
         }
 
         List<Integer> couponIds = new ArrayList<>(couponIdCouponMap.keySet());
-        List<CouponEntity> offerCoupons = filterValidOfferCoupons(cartRequest, allCoupons, couponIdCouponMap);
-        List<CouponEntity> calendarCoupons = filterValidCalendarCoupons(couponIdCouponMap);
-        List<CouponEntity> categoryCoupons = filterValidCategoryCoupons(cartRequest, allCoupons, couponIdCouponMap);
+        List<Integer> invalidOfferCoupons = filterInvalidOfferCoupons(cartRequest, allCoupons);
+        List<Integer> invalidCalendarCoupons = filterInvalidCalendarCoupons(couponIdCouponMap);
+        List<Integer> invalidCategoryCoupons = filterInvalidCategoryCoupons(cartRequest, couponIdCouponMap);
+        List<CouponEntity> validCoupons = new ArrayList<>();
 
-        return convertCoupons(categoryCoupons);
+        for (Integer couponId : couponIds) {
+            if (!(invalidOfferCoupons.contains(couponId)
+                    || invalidCalendarCoupons.contains(couponId)
+                    || invalidCategoryCoupons.contains(couponId))
+            ) {
+                validCoupons.add(couponIdCouponMap.get(couponId));
+            }
+        }
+
+        List<Coupon> filteredCoupons = filterCoupons(cartRequest, validCoupons);
+
+        return filteredCoupons;
     }
 
-    private List<CouponEntity> filterValidCategoryCoupons(CartRequest cartRequest, Iterable<CouponEntity> allCoupons, Map<Integer, CouponEntity> couponIdCouponMap) {
-        List<CouponEntity> validCoupons = new ArrayList<>();
+    private List<Coupon> filterCoupons(CartRequest cartRequest, List<CouponEntity> validCoupons) {
+        Map<String, List<CouponEntity>> couponCodeCouponMap = new HashMap<>();
+        String couponCode;
+        List<CouponEntity> couponEntities = new ArrayList<>();
+        Double minCartValue;
+        CouponEntity requiredCoupon;
+
+        for (CouponEntity couponEntity : validCoupons) {
+            if (!couponEntity.getListOfCouponCodes().isEmpty()) {
+                couponCode = couponEntity.getListOfCouponCodes().get(0).getCouponCode();
+                if (!couponCodeCouponMap.containsKey(couponCode)) {
+                    couponCodeCouponMap.put(couponCode, new ArrayList<CouponEntity>());
+                }
+
+                couponCodeCouponMap.get(couponCode).add(couponEntity);
+            }
+        }
+
+        for (String code : couponCodeCouponMap.keySet()) {
+            minCartValue = 0.0;
+            requiredCoupon = null;
+
+            for (CouponEntity entity : couponCodeCouponMap.get(code)) {
+                if (entity.getMinCartValue() != null && entity.getMinCartValue() > minCartValue) {
+                    minCartValue = entity.getMinCartValue();
+                    requiredCoupon = entity;
+                }
+            }
+
+            if (requiredCoupon != null) {
+                couponEntities.add(requiredCoupon);
+            } else if (couponCodeCouponMap.get(code).size() == 1) {
+                couponEntities.add(couponCodeCouponMap.get(code).get(0));
+            }
+        }
+
+        return convertCoupons(couponEntities, cartRequest);
+    }
+
+    private List<Integer> filterInvalidCategoryCoupons(CartRequest cartRequest, Map<Integer, CouponEntity> couponIdCouponMap) {
+        List<Integer> invalidCoupons = new ArrayList<>();
         List<Integer> couponIds = new ArrayList<>(couponIdCouponMap.keySet());
 
         Iterable<RuleCategoryMappingEntity> rules = ruleCategoryMappingRepository.findByCouponEntityIdIn(couponIds);
@@ -94,16 +144,16 @@ public class CartServiceImpl implements CartService {
         }
 
         for (Integer coupId : couponIdRuleMap.keySet()) {
-            if (validateCategoryRule(cartRequest, couponIdRuleMap.get(coupId))) {
-                validCoupons.add(couponIdCouponMap.get(coupId));
+            if (!validateCategoryRule(cartRequest, couponIdRuleMap.get(coupId))) {
+                invalidCoupons.add(coupId);
             }
         }
 
-        return validCoupons;
+        return invalidCoupons;
     }
 
-    private List<CouponEntity> filterValidCalendarCoupons(Map<Integer, CouponEntity> couponIdCouponMap) {
-        List<CouponEntity> validCoupons = new ArrayList<>();
+    private List<Integer> filterInvalidCalendarCoupons(Map<Integer, CouponEntity> couponIdCouponMap) {
+        List<Integer> invalidCoupons = new ArrayList<>();
         List<Integer> couponIds = new ArrayList<>(couponIdCouponMap.keySet());
 
         Iterable<RuleCalendarMappingEntity> rules = ruleCalendarMappingRepository.findByCouponEntityIdIn(couponIds);
@@ -121,12 +171,12 @@ public class CartServiceImpl implements CartService {
         }
 
         for (Integer coupId : couponIdRuleMap.keySet()) {
-            if (validateCalendarRule(couponIdRuleMap.get(coupId))) {
-                validCoupons.add(couponIdCouponMap.get(coupId));
+            if (!validateCalendarRule(couponIdRuleMap.get(coupId))) {
+                invalidCoupons.add(coupId);
             }
         }
 
-        return validCoupons;
+        return invalidCoupons;
     }
 
     private Boolean validateCategoryRule(CartRequest cartRequest, List<RuleCategoryMappingEntity> ruleCategoryMappingEntities) {
@@ -225,8 +275,8 @@ public class CartServiceImpl implements CartService {
         return valid || previousValid;
     }
 
-    private List<CouponEntity> filterValidOfferCoupons(CartRequest cartRequest, Iterable<CouponEntity> allCoupons, Map<Integer, CouponEntity> couponIdCouponMap) {
-        List<CouponEntity> validCoupons = new ArrayList<>();
+    private List<Integer> filterInvalidOfferCoupons(CartRequest cartRequest, Iterable<CouponEntity> allCoupons) {
+        List<Integer> invalidCoupons = new ArrayList<>();
         List<Integer> couponIds = new ArrayList<>();
 
         for (CouponEntity couponEntity : allCoupons) {
@@ -239,12 +289,12 @@ public class CartServiceImpl implements CartService {
         Map<String, Integer> cartSkus = cartRequest.getSkuQuantityMap();
 
         for (RuleOfferMappingEntity offerRule : offers) {
-            if (validateOffer(cartSkus, offerRule)) {
-                validCoupons.add(couponIdCouponMap.get(offerRule.getCouponEntity().getId()));
+            if (!validateOffer(cartSkus, offerRule)) {
+                invalidCoupons.add(offerRule.getCouponEntity().getId());
             }
         }
 
-        return validCoupons;
+        return invalidCoupons;
     }
 
     private Boolean validateOffer (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule) {
@@ -266,11 +316,11 @@ public class CartServiceImpl implements CartService {
         return count >= offerRule.getBuyQuantity();
     }
 
-    private List<Coupon> convertCoupons(List<CouponEntity> entities) {
+    private List<Coupon> convertCoupons(List<CouponEntity> entities, CartRequest cartRequest) {
         List<Coupon> coupons = new ArrayList<>();
 
         for (CouponEntity entity : entities) {
-            coupons.add(new Coupon(entity));
+            coupons.add(new Coupon(entity, cartRequest));
         }
 
         return coupons;

@@ -37,6 +37,15 @@ public class CouponEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private CouponType couponType;
 
+    @Column(name = "item_type")
+    private String itemType;
+
+    @Column(name = "discount_percentage")
+    private Double discountPercentage;
+
+    @Column(name = "is_manual")
+    private Boolean isManual;
+
     @Column(name = "min_cart_value")
     private Double minCartValue;
 
@@ -88,6 +97,34 @@ public class CouponEntity implements Serializable {
         this.couponType = couponType;
     }
 
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(Double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public Boolean getManual() {
+        if (isManual == null) {
+            return true;
+        }
+
+        return isManual;
+    }
+
+    public void setManual(Boolean manual) {
+        isManual = manual;
+    }
+
     public Double getMinCartValue() {
         return minCartValue;
     }
@@ -101,6 +138,10 @@ public class CouponEntity implements Serializable {
     }
 
     public Boolean getMergeable() {
+        if (isMergeable == null) {
+            return false;
+        }
+
         return isMergeable;
     }
 

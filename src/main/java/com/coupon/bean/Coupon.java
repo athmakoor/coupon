@@ -8,17 +8,21 @@ import java.util.Map;
 import com.coupon.bean.jpa.CouponCodeLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponDescriptionLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponEntity;
+import com.coupon.constants.CouponType;
 
 public class Coupon implements Serializable {
     private Map<String, String> code = new HashMap<>();
     private Map<String, String> description = new HashMap<>();
     private Double amount;
+    private Boolean is_mergeable;
+    private Boolean is_manual;
+    private Boolean disabled = false;
 
-    public Coupon () {
+    public Coupon() {
         super();
     }
 
-    public Coupon (CouponEntity entity) {
+    public Coupon (CouponEntity entity, CartRequest cartRequest) {
         super();
         List<CouponCodeLanguageMappingEntity> codes = entity.getListOfCouponCodes();
         List<CouponDescriptionLanguageMappingEntity> descs = entity.getListOfCouponDesc();
@@ -31,7 +35,18 @@ public class Coupon implements Serializable {
             this.description.put(desc.getLanguage().name(), desc.getCouponDesc());
         }
 
-        this.amount = entity.getMaxDiscount();
+        if (entity.getCouponType().equals(CouponType.flat)) {
+            this.setAmount(entity.getMaxDiscount());
+        } else if (entity.getCouponType().equals(CouponType.percentage)) {
+            if (entity.getItemType() != null) {
+                this.setAmount(Math.min(entity.getDiscountPercentage() * cartRequest.gePaymentTypeCartPriceMap().get(entity.getItemType()) / 100, entity.getMaxDiscount()));
+            } else {
+                this.setAmount(Math.min(entity.getDiscountPercentage() * cartRequest.getTotalCartValue() / 100, entity.getMaxDiscount()));
+            }
+        }
+
+        this.is_mergeable = entity.getMergeable();
+        this.is_manual = entity.getManual();
     }
 
     public Map<String, String> getCode() {
@@ -56,5 +71,29 @@ public class Coupon implements Serializable {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Boolean getIs_mergeable() {
+        return is_mergeable;
+    }
+
+    public void setIs_mergeable(Boolean is_mergeable) {
+        this.is_mergeable = is_mergeable;
+    }
+
+    public Boolean getIs_manual() {
+        return is_manual;
+    }
+
+    public void setIs_manual(Boolean is_manual) {
+        this.is_manual = is_manual;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
 }
