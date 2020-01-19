@@ -2,7 +2,11 @@ package com.coupon.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +95,32 @@ public class CartRequest implements Serializable {
         return skus;
     }
 
+    public List<String> sortSkusByPrice(List<String> skus) {
+        Comparator<CartItem> compareByPrice = new Comparator<CartItem>() {
+            @Override
+            public int compare(CartItem o1, CartItem o2) {
+                return o2.getAmount().compareTo(o1.getAmount());
+            }
+        };
+
+        Map<String, CartItem> skuCartItemMap = getSkuCartItemMap();
+
+        List<CartItem> items = new ArrayList<>();
+        List<String> orderedSkus = new ArrayList<>();
+
+        for (String sku : skus) {
+            items.add(skuCartItemMap.get(sku));
+        }
+
+        Collections.sort(items, compareByPrice);
+
+        for (CartItem item : items) {
+            orderedSkus.add(item.getSku());
+        }
+
+        return orderedSkus;
+    }
+
     public Map<String, Double> geCategoryCartPriceMap() {
         Map<String, Double> priceMap = new HashMap<>();
         Double price;
@@ -110,6 +140,16 @@ public class CartRequest implements Serializable {
         }
 
         return priceMap;
+    }
+
+    public Map<String, CartItem> getSkuCartItemMap() {
+        Map<String, CartItem> map = new HashMap<>();
+
+        for (CartItem cartItem : cart_data) {
+            map.put(cartItem.getSku(),cartItem);
+        }
+
+        return map;
     }
 
     public Map<String, List<CartItem>> geCategoryCartItemMap() {

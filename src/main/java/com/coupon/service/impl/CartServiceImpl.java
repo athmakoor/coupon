@@ -83,7 +83,58 @@ public class CartServiceImpl implements CartService {
 
         List<Coupon> filteredCoupons = filterCoupons(cartRequest, validCoupons);
 
+        updateFilteredCoupons(filteredCoupons, couponIdCouponMap, cartRequest);
+
         return filteredCoupons;
+    }
+
+    private List<String> sortSkus(CartRequest cartRequest, List<String> skus) {
+        return cartRequest.sortSkusByPrice(skus);
+    }
+    private void updateFilteredCoupons(List<Coupon> filteredCoupons, Map<Integer, CouponEntity> couponIdCouponMap, CartRequest cartRequest) {
+        CouponEntity couponEntity;
+        List<RuleOfferMappingEntity> ruleOfferMappingEntities;
+        Map<String, Integer> cartSkus = cartRequest.getSkuQuantityMap();
+        Map<String, Integer> skusForOffer;
+        Boolean enabled;
+
+
+        for (Coupon coupon : filteredCoupons) {
+            couponEntity = couponIdCouponMap.get(coupon.getCouponId());
+            ruleOfferMappingEntities = couponEntity.getRuleOfferMappingEntities();
+            enabled = true;
+
+            for (RuleOfferMappingEntity offerRule : ruleOfferMappingEntities) {
+                enabled = checkOfferSkus(cartSkus, offerRule, cartRequest);
+
+                if (enabled) {
+                    skusForOffer = removeBuySkus(cartSkus, sortSkus(cartRequest, new ArrayList<>(cartSkus.keySet())), offerRule);
+                    coupon.setAmount(getBestOfferPrice(cartRequest, skusForOffer, offerRule.getOfferQuantity()));
+                    break;
+                }
+            }
+
+            coupon.setDisabled(!enabled);
+        }
+    }
+
+    private Double getBestOfferPrice(CartRequest cartRequest, Map<String, Integer> skusForOffer, Integer offerQuantity) {
+        Double amount = 0.0;
+        Map<String, CartItem> cartSkusMap = cartRequest.getSkuCartItemMap();
+        Integer tempQuantity = offerQuantity, tempCount;
+
+        for (String cartSku : skusForOffer.keySet()) {
+            tempCount = Math.min(tempQuantity, skusForOffer.get(cartSku));
+            amount += tempCount * cartSkusMap.get(cartSku).getAmount();
+
+            tempQuantity -= tempCount;
+
+            if (tempQuantity == 0) {
+                break;
+            }
+        }
+
+        return amount;
     }
 
     private List<Coupon> filterCoupons(CartRequest cartRequest, List<CouponEntity> validCoupons) {
@@ -295,6 +346,51 @@ public class CartServiceImpl implements CartService {
         }
 
         return invalidCoupons;
+    }
+
+    private Map<String, Integer> removeBuySkus (Map<String, Integer> cartSkus, List<String> sortedSkus, RuleOfferMappingEntity offerRule) {
+        String buySkus = offerRule.getOfferSkus();
+        String[] buySkusSplit = buySkus.split(",");
+        List<String> buySkuList = Arrays.asList(buySkusSplit);
+        Integer buyCount = offerRule.getBuyQuantity(), tempCount;
+        Map<String, Integer> cartSkusCopy = new HashMap<>(cartSkus);
+
+        for (String cartSku : sortedSkus) {
+            if (buySkuList.contains(cartSku)) {
+                tempCount = Math.min(buyCount, cartSkusCopy.get(cartSku));
+
+                cartSkusCopy.put(cartSku, cartSkusCopy.get(cartSku) - tempCount);
+                buyCount -= tempCount;
+
+                if (buyCount == 0) {
+                    break;
+                }
+            }
+        }
+
+        return cartSkusCopy;
+    }
+
+    private Boolean checkOfferSkus (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule, CartRequest cartRequest) {
+        String offerSkus = offerRule.getOfferSkus();
+        String[] offerSkusSplit = offerSkus.split(",");
+        List<String> offerSkuList = Arrays.asList(offerSkusSplit);
+
+        Integer count = 0;
+
+        Map<String, Integer> cartSkusCopy = removeBuySkus(cartSkus, sortSkus(cartRequest, new ArrayList<>(cartSkus.keySet())), offerRule);
+
+        for (String cartSku : cartSkusCopy.keySet()) {
+            if (offerSkuList.contains(cartSku)) {
+                count += cartSkusCopy.get(cartSku);
+
+                if (count >= offerRule.getOfferQuantity()) {
+                    break;
+                }
+            }
+        }
+
+        return count >= offerRule.getOfferQuantity();
     }
 
     private Boolean validateOffer (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule) {

@@ -9,6 +9,7 @@ import com.coupon.bean.jpa.CouponCodeLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponDescriptionLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponEntity;
 import com.coupon.constants.CouponType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Coupon implements Serializable {
     private Map<String, String> code = new HashMap<>();
@@ -17,6 +18,8 @@ public class Coupon implements Serializable {
     private Boolean is_mergeable;
     private Boolean is_manual;
     private Boolean disabled = false;
+    @JsonIgnore
+    private Integer couponId;
 
     public Coupon() {
         super();
@@ -47,6 +50,7 @@ public class Coupon implements Serializable {
 
         this.is_mergeable = entity.getMergeable();
         this.is_manual = entity.getManual();
+        this.couponId = entity.getId();
     }
 
     public Map<String, String> getCode() {
@@ -95,5 +99,13 @@ public class Coupon implements Serializable {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
     }
 }

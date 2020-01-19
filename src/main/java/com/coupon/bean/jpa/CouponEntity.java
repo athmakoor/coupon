@@ -67,6 +67,21 @@ public class CouponEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date closedOn;
 
+    @OneToMany(mappedBy = "couponEntity", targetEntity = CouponProductRestrictionsEntity.class)
+    private List<CouponProductRestrictionsEntity> couponProductRestrictionsEntities;
+
+    @OneToMany(mappedBy = "couponEntity", targetEntity = RuleCalendarMappingEntity.class)
+    private List<RuleCalendarMappingEntity> ruleCalendarMappingEntities;
+
+    @OneToMany(mappedBy = "couponEntity", targetEntity = RuleCategoryMappingEntity.class)
+    private List<RuleCategoryMappingEntity> ruleCategoryMappingEntities;
+
+    @OneToMany(mappedBy = "couponEntity", targetEntity = RuleOfferMappingEntity.class)
+    private List<RuleOfferMappingEntity> ruleOfferMappingEntities;
+
+    @OneToMany(mappedBy = "couponEntity", targetEntity = RuleTransactionMappingEntity.class)
+    private List<RuleTransactionMappingEntity> ruleTransactionMappingEntities;
+
     @OneToMany(mappedBy = "couponEntity", targetEntity = CouponCodeLanguageMappingEntity.class)
     private List<CouponCodeLanguageMappingEntity> listOfCouponCodes;
 
@@ -179,6 +194,46 @@ public class CouponEntity implements Serializable {
 
     public List<CouponCodeLanguageMappingEntity> getListOfCouponCodes() {
         return listOfCouponCodes;
+    }
+
+    public List<CouponProductRestrictionsEntity> getCouponProductRestrictionsEntities() {
+        return couponProductRestrictionsEntities;
+    }
+
+    public void setCouponProductRestrictionsEntities(List<CouponProductRestrictionsEntity> couponProductRestrictionsEntities) {
+        this.couponProductRestrictionsEntities = couponProductRestrictionsEntities;
+    }
+
+    public List<RuleCalendarMappingEntity> getRuleCalendarMappingEntities() {
+        return ruleCalendarMappingEntities;
+    }
+
+    public void setRuleCalendarMappingEntities(List<RuleCalendarMappingEntity> ruleCalendarMappingEntities) {
+        this.ruleCalendarMappingEntities = ruleCalendarMappingEntities;
+    }
+
+    public List<RuleCategoryMappingEntity> getRuleCategoryMappingEntities() {
+        return ruleCategoryMappingEntities;
+    }
+
+    public void setRuleCategoryMappingEntities(List<RuleCategoryMappingEntity> ruleCategoryMappingEntities) {
+        this.ruleCategoryMappingEntities = ruleCategoryMappingEntities;
+    }
+
+    public List<RuleOfferMappingEntity> getRuleOfferMappingEntities() {
+        return ruleOfferMappingEntities;
+    }
+
+    public void setRuleOfferMappingEntities(List<RuleOfferMappingEntity> ruleOfferMappingEntities) {
+        this.ruleOfferMappingEntities = ruleOfferMappingEntities;
+    }
+
+    public List<RuleTransactionMappingEntity> getRuleTransactionMappingEntities() {
+        return ruleTransactionMappingEntities;
+    }
+
+    public void setRuleTransactionMappingEntities(List<RuleTransactionMappingEntity> ruleTransactionMappingEntities) {
+        this.ruleTransactionMappingEntities = ruleTransactionMappingEntities;
     }
 
     public void setListOfCouponCodes(List<CouponCodeLanguageMappingEntity> listOfCouponCodes) {
