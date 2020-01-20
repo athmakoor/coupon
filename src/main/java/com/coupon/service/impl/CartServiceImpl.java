@@ -48,6 +48,15 @@ public class CartServiceImpl implements CartService {
         CartResponse response = new CartResponse();
 
         response.setCouponsAndDiscounts(getCoupons(cartRequest));
+        if (cartRequest.getFields() != null && !cartRequest.getFields().isEmpty()) {
+            if (!cartRequest.getFields().contains("coupons")) {
+                response.setCoupons(new ArrayList<Coupon>());
+            }
+
+            if (!cartRequest.getFields().contains("discounts")) {
+                response.setDiscounts(new ArrayList<Coupon>());
+            }
+        }
         response.setTxnId(cartRequest.getTxn_id());
         response.setStatus("success");
         response.setMessage("ok");
@@ -243,6 +252,10 @@ public class CartServiceImpl implements CartService {
             category = rule.getCategoryName();
             quantity = rule.getQuantity();
             categoryPrice = categoryCartPriceMap.get(category);
+
+            if (categoryPrice == null) {
+                categoryPrice = 0.0;
+            }
 
             valid = (quantity == null ||
                     (categoryCartItemMap.get(category) != null && categoryCartItemMap.get(category).size() >= quantity));

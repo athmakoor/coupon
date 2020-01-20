@@ -11,7 +11,7 @@ public class CartResponse implements Serializable {
     private String txnId;
     private List<Coupon> coupons = new ArrayList<>();
     private List<Coupon> discounts = new ArrayList<>();
-    private List<Referral> referrals;
+    private List<Referral> referrals = new ArrayList<>();
 
     public String getStatus() {
         return status;
