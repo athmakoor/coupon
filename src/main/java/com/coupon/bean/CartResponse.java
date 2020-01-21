@@ -12,6 +12,7 @@ public class CartResponse implements Serializable {
     private List<Coupon> coupons = new ArrayList<>();
     private List<Coupon> discounts = new ArrayList<>();
     private List<Referral> referrals = new ArrayList<>();
+    private Double referralBonus;
 
     public String getStatus() {
         return status;
@@ -67,6 +68,14 @@ public class CartResponse implements Serializable {
 
     public void setReferrals(List<Referral> referrals) {
         this.referrals = referrals;
+    }
+
+    public Double getReferralBonus() {
+        return referralBonus;
+    }
+
+    public void setReferralBonus(Double referralBonus) {
+        this.referralBonus = referralBonus;
     }
 
     public void setCouponsAndDiscounts(List<Coupon> coupons) {

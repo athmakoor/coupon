@@ -67,6 +67,9 @@ public class CouponEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date closedOn;
 
+    @Column(name="active")
+    private Boolean active = true;
+
     @OneToMany(mappedBy = "couponEntity", targetEntity = CouponProductRestrictionsEntity.class)
     private List<CouponProductRestrictionsEntity> couponProductRestrictionsEntities;
 
@@ -190,6 +193,14 @@ public class CouponEntity implements Serializable {
 
     public void setClosedOn(Date closedOn) {
         this.closedOn = closedOn;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public List<CouponCodeLanguageMappingEntity> getListOfCouponCodes() {

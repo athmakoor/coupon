@@ -2,12 +2,14 @@ package com.coupon.bean.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,9 +35,21 @@ public class ReferralCouponEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date startedOn;
 
-    @Column(name="expired_on")
+    @Column(name="closed_on")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiredOn;
+    private Date closedOn;
+
+    @Column(name="active")
+    private Boolean active = true;
+
+    @OneToMany(mappedBy = "referralCouponEntity", targetEntity = ReferralBonusMappingEntity.class)
+    private List<ReferralBonusMappingEntity> referralBonusMappingEntityList;
+
+    @OneToMany(mappedBy = "referralCouponEntity", targetEntity = ReferralCouponCodeLanguageMappingEntity.class)
+    private List<ReferralCouponCodeLanguageMappingEntity> listOfCouponCodes;
+
+    @OneToMany(mappedBy = "referralCouponEntity", targetEntity = ReferralCouponDescriptionLanguageMappingEntity.class)
+    private List<ReferralCouponDescriptionLanguageMappingEntity> listOfCouponDesc;
 
     public Integer getId() {
         return id;
@@ -69,11 +83,43 @@ public class ReferralCouponEntity implements Serializable {
         this.startedOn = startedOn;
     }
 
-    public Date getExpiredOn() {
-        return expiredOn;
+    public Date getClosedOn() {
+        return closedOn;
     }
 
-    public void setExpiredOn(Date expiredOn) {
-        this.expiredOn = expiredOn;
+    public void setClosedOn(Date closedOn) {
+        this.closedOn = closedOn;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public List<ReferralBonusMappingEntity> getReferralBonusMappingEntityList() {
+        return referralBonusMappingEntityList;
+    }
+
+    public void setReferralBonusMappingEntityList(List<ReferralBonusMappingEntity> referralBonusMappingEntityList) {
+        this.referralBonusMappingEntityList = referralBonusMappingEntityList;
+    }
+
+    public List<ReferralCouponCodeLanguageMappingEntity> getListOfCouponCodes() {
+        return listOfCouponCodes;
+    }
+
+    public void setListOfCouponCodes(List<ReferralCouponCodeLanguageMappingEntity> listOfCouponCodes) {
+        this.listOfCouponCodes = listOfCouponCodes;
+    }
+
+    public List<ReferralCouponDescriptionLanguageMappingEntity> getListOfCouponDesc() {
+        return listOfCouponDesc;
+    }
+
+    public void setListOfCouponDesc(List<ReferralCouponDescriptionLanguageMappingEntity> listOfCouponDesc) {
+        this.listOfCouponDesc = listOfCouponDesc;
     }
 }

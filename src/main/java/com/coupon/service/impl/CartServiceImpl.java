@@ -16,15 +16,24 @@ import com.coupon.bean.CartItem;
 import com.coupon.bean.CartRequest;
 import com.coupon.bean.CartResponse;
 import com.coupon.bean.Coupon;
+import com.coupon.bean.Referral;
 import com.coupon.bean.jpa.CouponEntity;
+import com.coupon.bean.jpa.ReferralBonusMappingEntity;
+import com.coupon.bean.jpa.ReferralCodeUserMappingEntity;
+import com.coupon.bean.jpa.ReferralTransactionEntity;
 import com.coupon.bean.jpa.RuleCalendarMappingEntity;
 import com.coupon.bean.jpa.RuleCategoryMappingEntity;
 import com.coupon.bean.jpa.RuleOfferMappingEntity;
 import com.coupon.constants.CalenderType;
 import com.coupon.constants.CouponType;
+import com.coupon.constants.ReferralUserType;
 import com.coupon.constants.Relation;
+import com.coupon.constants.TransactionType;
 import com.coupon.repository.ConversionDataRepository;
 import com.coupon.repository.CouponRepository;
+import com.coupon.repository.ReferralBonusMappingRepository;
+import com.coupon.repository.ReferralCodeUserMappingRepository;
+import com.coupon.repository.ReferralTransactionRepository;
 import com.coupon.repository.RuleCalendarMappingRepository;
 import com.coupon.repository.RuleCategoryMappingRepository;
 import com.coupon.repository.RuleOfferMappingRepository;
@@ -42,6 +51,12 @@ public class CartServiceImpl implements CartService {
     private RuleCalendarMappingRepository ruleCalendarMappingRepository;
     @Resource
     private RuleCategoryMappingRepository ruleCategoryMappingRepository;
+    @Resource
+    private ReferralBonusMappingRepository referralBonusMappingRepository;
+    @Resource
+    private ReferralCodeUserMappingRepository referralCodeUserMappingRepository;
+    @Resource
+    private ReferralTransactionRepository referralTransactionRepository;
 
     @Override
     public CartResponse getCartResponse(CartRequest cartRequest) {
@@ -57,12 +72,52 @@ public class CartServiceImpl implements CartService {
                 response.setDiscounts(new ArrayList<Coupon>());
             }
         }
+
+        response.setReferrals(getReferrals(cartRequest));
+        response.setReferralBonus(getUserReferralBonus(cartRequest.getUser_data().getUser_id()));
         response.setTxnId(cartRequest.getTxn_id());
         response.setStatus("success");
         response.setMessage("ok");
         response.setStatus_code(2000);
 
         return response;
+    }
+
+    private Double getUserReferralBonus(String userId) {
+        Double amount = 0.0;
+        List<ReferralTransactionEntity> transactionEntities = referralTransactionRepository.findByUserId(userId);
+
+        for (ReferralTransactionEntity entity : transactionEntities) {
+            if (entity.getTransactionType().equals(TransactionType.credit)) {
+                amount += entity.getAmount();
+            } else {
+                amount -= entity.getAmount();
+            }
+        }
+
+        return amount;
+    }
+
+    private List<Referral> getReferrals(CartRequest cartRequest) {
+        Date now = new Date();
+        List<Referral> referrals = new ArrayList<>();
+        List<ReferralCodeUserMappingEntity> referralCodeUserMappingEntityList = referralCodeUserMappingRepository.findByUserId(cartRequest.getUser_data().getUser_id());
+
+        if (referralCodeUserMappingEntityList.isEmpty()) {
+            return referrals;
+        }
+
+        if (referralCodeUserMappingEntityList.get(0).getReferrerCode() == null) {
+            return referrals;
+        }
+
+        List<ReferralBonusMappingEntity> activeReferralBonusList = referralBonusMappingRepository.findAllValidByUserType(now, cartRequest.getTotalCartValue(), ReferralUserType.referee);
+
+        for (ReferralBonusMappingEntity entity : activeReferralBonusList) {
+            referrals.add(new Referral(entity, cartRequest));
+        }
+
+        return referrals;
     }
 
     private List<Coupon> getCoupons(CartRequest cartRequest) {
