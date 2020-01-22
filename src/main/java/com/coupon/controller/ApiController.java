@@ -25,18 +25,23 @@ public class ApiController {
 	@Resource
 	private UserService userService;
 
-	@PostMapping("/checkoutapi")
+	@PostMapping("/checkout")
 	CartResponse requestInfo(@RequestBody final CartRequest requestBody) {
 		return cartService.getCartResponse(requestBody);
 	}
 
-	@PostMapping("/conversionapi")
+	@PostMapping("/conversion")
 	ConversionResponse saveCart(@RequestBody final ConversionRequest requestBody) {
 		return conversionService.saveConversions(requestBody);
 	}
 
-	@PostMapping("/createuser")
+	@PostMapping("/create-user")
 	CreateUserResponse createUser(@RequestBody final CreateUserRequest requestBody) {
+		return userService.createUser(requestBody);
+	}
+
+	@PostMapping("/coupon-details")
+	CreateUserResponse getCouponDetails(@RequestBody final CreateUserRequest requestBody) {
 		return userService.createUser(requestBody);
 	}
 }

@@ -6,9 +6,9 @@ import java.util.List;
 public class ConversionRequest implements Serializable {
     private String txn_id;
     private String msg;
-    private String status_code;
-    private ConversionData conversion_data;
-    private List<CartItem> cart_data;
+    private String coupon_codes;
+    private String status;
+    private Double rewards_used;
 
     public String getTxn_id() {
         return txn_id;
@@ -26,27 +26,27 @@ public class ConversionRequest implements Serializable {
         this.msg = msg;
     }
 
-    public String getStatus_code() {
-        return status_code;
+    public String getCoupon_codes() {
+        return coupon_codes;
     }
 
-    public void setStatus_code(String status_code) {
-        this.status_code = status_code;
+    public void setCoupon_codes(String coupon_codes) {
+        this.coupon_codes = coupon_codes;
     }
 
-    public ConversionData getConversion_data() {
-        return conversion_data;
+    public String getStatus() {
+        return status;
     }
 
-    public void setConversion_data(ConversionData conversion_data) {
-        this.conversion_data = conversion_data;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public List<CartItem> getCart_data() {
-        return cart_data;
+    public Double getRewards_used() {
+        return rewards_used;
     }
 
-    public void setCart_data(List<CartItem> cart_data) {
-        this.cart_data = cart_data;
+    public void setRewards_used(Double rewards_used) {
+        this.rewards_used = rewards_used;
     }
 }

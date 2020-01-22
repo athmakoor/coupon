@@ -17,6 +17,8 @@ import com.coupon.bean.CartRequest;
 import com.coupon.bean.CartResponse;
 import com.coupon.bean.Coupon;
 import com.coupon.bean.Referral;
+import com.coupon.bean.jpa.CartDataEntity;
+import com.coupon.bean.jpa.CartItemEntity;
 import com.coupon.bean.jpa.CouponEntity;
 import com.coupon.bean.jpa.ReferralBonusMappingEntity;
 import com.coupon.bean.jpa.ReferralCodeUserMappingEntity;
@@ -29,6 +31,8 @@ import com.coupon.constants.CouponType;
 import com.coupon.constants.ReferralUserType;
 import com.coupon.constants.Relation;
 import com.coupon.constants.TransactionType;
+import com.coupon.repository.CartDataRepository;
+import com.coupon.repository.CartItemRepository;
 import com.coupon.repository.ConversionDataRepository;
 import com.coupon.repository.CouponRepository;
 import com.coupon.repository.ReferralBonusMappingRepository;
@@ -57,10 +61,16 @@ public class CartServiceImpl implements CartService {
     private ReferralCodeUserMappingRepository referralCodeUserMappingRepository;
     @Resource
     private ReferralTransactionRepository referralTransactionRepository;
+    @Resource
+    private CartDataRepository cartDataRepository;
+    @Resource
+    private CartItemRepository cartItemRepository;
 
     @Override
     public CartResponse getCartResponse(CartRequest cartRequest) {
         CartResponse response = new CartResponse();
+
+        saveCart(cartRequest);
 
         response.setCouponsAndDiscounts(getCoupons(cartRequest));
         if (cartRequest.getFields() != null && !cartRequest.getFields().isEmpty()) {
@@ -81,6 +91,36 @@ public class CartServiceImpl implements CartService {
         response.setStatus_code(2000);
 
         return response;
+    }
+
+    @Override
+    public void saveCart(CartRequest cartRequest) {
+        CartDataEntity cartDataEntity = new CartDataEntity();
+
+        cartDataEntity.setTxnId(cartRequest.getTxn_id());
+        cartDataEntity.setUserId(cartRequest.getUser_data().getUser_id());
+        cartDataEntity.setInvoiceAmount(cartRequest.getTotalCartValue());
+        cartDataEntity.setCreatedOn(new Date());
+
+        CartDataEntity savedCartDataEntity = cartDataRepository.save(cartDataEntity);
+
+        CartItemEntity cartItemEntity;
+        List<CartItemEntity> cartItemEntities = new ArrayList<>();
+
+        for (CartItem item : cartRequest.getCart_data()) {
+            cartItemEntity = new CartItemEntity();
+            cartItemEntity.setAmount(item.getAmount());
+            cartItemEntity.setCategory(item.getCategory());
+            cartItemEntity.setItemName(item.getItem_name());
+            cartItemEntity.setQuantity(item.getQuantity());
+            cartItemEntity.setType(item.getType());
+            cartItemEntity.setSku(item.getSku());
+            cartItemEntity.setCartDataEntity(savedCartDataEntity);
+
+            cartItemEntities.add(cartItemEntity);
+        }
+
+        cartItemRepository.save(cartItemEntities);
     }
 
     private Double getUserReferralBonus(String userId) {

@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,59 +29,42 @@ public class ConversionDataEntity implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "txn_id", nullable = false)
-    private String txnId;
-
-    @Column(name = "status_code", nullable = false)
-    private String statusCode;
-
     @Column(name = "msg")
     private String msg;
-
-    @Column(name = "user_id", nullable = false)
-    private String userId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "coupons_used")
+    private String couponsUsed;
 
-    @Column(name = "code")
-    private String code;
+    @Column(name = "rewards_used")
+    private Double rewardsUsed;
 
-    @Column(name = "value")
-    private Double value;
+    @ManyToOne
+    @JoinColumn(name = "cart_id_ref", referencedColumnName = "id")
+    private CartDataEntity cartDataEntity;
 
-    @Column(name = "invoice_amount", nullable = false)
-    private Double invoiceAmount;
-
-    @Column(name="inserted_date")
-    @Temporal(TemporalType.DATE)
-    private Date insertedDate;
-
-    @Column(name="inserted_time")
-    @Temporal(TemporalType.TIME)
-    private Date insertedTime;
+    @Column(name="created_on")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdOn;
 
     public ConversionDataEntity () {
         super();
     }
 
-    public ConversionDataEntity(ConversionRequest data) {
+    public ConversionDataEntity(ConversionRequest data, Integer cartDataId) {
         Date date = new Date();
-        this.code = data.getConversion_data().getCode();
-        this.insertedDate = date;
-        this.insertedTime = date;
+        CartDataEntity cartDataEntity1 = new CartDataEntity();
+
+        cartDataEntity1.setId(cartDataId);
         this.msg = data.getMsg();
-        this.invoiceAmount = data.getConversion_data().getInvoice_amount();
-        this.value = data.getConversion_data().getValue();
-        this.type = data.getConversion_data().getType();
         this.status = Status.success;
-        this.statusCode = data.getStatus_code();
-        this.userId = data.getConversion_data().getUser_id();
-        this.txnId = data.getTxn_id();
+        this.createdOn = date;
+        this.cartDataEntity = cartDataEntity1;
+        this.couponsUsed = data.getCoupon_codes();
+        this.rewardsUsed = data.getRewards_used();
     }
 
     public Integer getId() {
@@ -90,36 +75,12 @@ public class ConversionDataEntity implements Serializable {
         this.id = id;
     }
 
-    public String getTxnId() {
-        return txnId;
-    }
-
-    public void setTxnId(String txnId) {
-        this.txnId = txnId;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
-
     public String getMsg() {
         return msg;
     }
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public Status getStatus() {
@@ -130,51 +91,35 @@ public class ConversionDataEntity implements Serializable {
         this.status = status;
     }
 
-    public String getType() {
-        return type;
+    public String getCouponsUsed() {
+        return couponsUsed;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCouponsUsed(String couponsUsed) {
+        this.couponsUsed = couponsUsed;
     }
 
-    public String getCode() {
-        return code;
+    public Double getRewardsUsed() {
+        return rewardsUsed;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setRewardsUsed(Double rewardsUsed) {
+        this.rewardsUsed = rewardsUsed;
     }
 
-    public Double getValue() {
-        return value;
+    public CartDataEntity getCartDataEntity() {
+        return cartDataEntity;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public void setCartDataEntity(CartDataEntity cartDataEntity) {
+        this.cartDataEntity = cartDataEntity;
     }
 
-    public Double getInvoiceAmount() {
-        return invoiceAmount;
+    public Date getCreatedOn() {
+        return createdOn;
     }
 
-    public void setInvoiceAmount(Double invoiceAmount) {
-        this.invoiceAmount = invoiceAmount;
-    }
-
-    public Date getInsertedDate() {
-        return insertedDate;
-    }
-
-    public void setInsertedDate(Date insertedDate) {
-        this.insertedDate = insertedDate;
-    }
-
-    public Date getInsertedTime() {
-        return insertedTime;
-    }
-
-    public void setInsertedTime(Date insertedTime) {
-        this.insertedTime = insertedTime;
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
     }
 }

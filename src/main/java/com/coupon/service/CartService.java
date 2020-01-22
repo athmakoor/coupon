@@ -5,4 +5,6 @@ import com.coupon.bean.CartResponse;
 
 public interface CartService {
     CartResponse getCartResponse(CartRequest cartRequest);
+
+    void saveCart(CartRequest cartRequest);
 }

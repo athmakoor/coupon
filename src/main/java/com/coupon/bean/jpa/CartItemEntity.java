@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,20 +18,14 @@ import com.coupon.bean.CartItem;
 import com.coupon.bean.ConversionRequest;
 
 @Entity
-@Table(name = "converstion_cart_data")
-public class ConverstionCartDataEntity implements Serializable {
+@Table(name = "cart_item")
+public class CartItemEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-
-    @Column(name = "txn_id")
-    private String txnId;
-
-    @Column(name = "user_id", nullable = false)
-    private String userId;
 
     @Column(name = "type")
     private String type;
@@ -46,29 +42,23 @@ public class ConverstionCartDataEntity implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name="inserted_date")
-    @Temporal(TemporalType.DATE)
-    private Date insertedDate;
+    @Column(name = "sku")
+    private String sku;
 
-    @Column(name="inserted_time")
-    @Temporal(TemporalType.TIME)
-    private Date insertedTime;
+    @ManyToOne
+    @JoinColumn(name = "cart_id_ref", referencedColumnName = "id")
+    private CartDataEntity cartDataEntity;
 
-    public ConverstionCartDataEntity () {
+    public CartItemEntity() {
         super();
     }
 
-    public ConverstionCartDataEntity(CartItem item, ConversionRequest data) {
-        Date date = new Date();
+    public CartItemEntity(CartItem item, ConversionRequest data) {
         this.amount = item.getAmount();
         this.category = item.getCategory();
         this.itemName = item.getItem_name();
         this.quantity = item.getQuantity();
         this.type = item.getType();
-        this.txnId = data.getTxn_id();
-        this.userId = data.getConversion_data().getUser_id();
-        this.insertedDate = date;
-        this.insertedTime = date;
     }
 
     public Integer getId() {
@@ -77,22 +67,6 @@ public class ConverstionCartDataEntity implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTxnId() {
-        return txnId;
-    }
-
-    public void setTxnId(String txnId) {
-        this.txnId = txnId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getType() {
@@ -135,19 +109,19 @@ public class ConverstionCartDataEntity implements Serializable {
         this.quantity = quantity;
     }
 
-    public Date getInsertedDate() {
-        return insertedDate;
+    public String getSku() {
+        return sku;
     }
 
-    public void setInsertedDate(Date insertedDate) {
-        this.insertedDate = insertedDate;
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
-    public Date getInsertedTime() {
-        return insertedTime;
+    public CartDataEntity getCartDataEntity() {
+        return cartDataEntity;
     }
 
-    public void setInsertedTime(Date insertedTime) {
-        this.insertedTime = insertedTime;
+    public void setCartDataEntity(CartDataEntity cartDataEntity) {
+        this.cartDataEntity = cartDataEntity;
     }
 }

@@ -14,9 +14,9 @@ import javax.print.attribute.AttributeSet;
 
 public class CartRequest implements Serializable {
     private String txn_id;
-    private List<String> fields;
+    private List<String> fields = new ArrayList<>();
     private UserData user_data;
-    private List<CartItem> cart_data;
+    private List<CartItem> cart_data = new ArrayList<>();
 
     public String getTxn_id() {
         return txn_id;
