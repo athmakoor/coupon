@@ -1,16 +1,18 @@
 package com.coupon.event.bean.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.coupon.utils.TimeUtil;
+import com.coupon.utils.UTCDateTimeConverter;
 
 @Entity
 @Table(name = "events")
@@ -31,19 +33,13 @@ public class EventEntity implements Serializable {
     @Column(name = "user_id", length = 50, nullable = false)
     private String userId;
 
-    @Column(name="inserted_date")
-    @Temporal(TemporalType.DATE)
-    private Date insertedDate;
-
-    @Column(name="inserted_time")
-    @Temporal(TemporalType.TIME)
-    private Date insertedTime;
+    @Column(name="inserted_on")
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime insertedOn;
 
     public EventEntity() {
         super();
-        Date date = new Date();
-        this.insertedDate = date;
-        this.insertedTime = date;
+        this.insertedOn = TimeUtil.getCurrentUTCTime();
     }
 
     public Integer getId() {
@@ -78,19 +74,11 @@ public class EventEntity implements Serializable {
         this.userId = userId;
     }
 
-    public Date getInsertedDate() {
-        return insertedDate;
+    public ZonedDateTime getInsertedOn() {
+        return insertedOn;
     }
 
-    public void setInsertedDate(Date insertedDate) {
-        this.insertedDate = insertedDate;
-    }
-
-    public Date getInsertedTime() {
-        return insertedTime;
-    }
-
-    public void setInsertedTime(Date insertedTime) {
-        this.insertedTime = insertedTime;
+    public void setInsertedOn(ZonedDateTime insertedOn) {
+        this.insertedOn = insertedOn;
     }
 }

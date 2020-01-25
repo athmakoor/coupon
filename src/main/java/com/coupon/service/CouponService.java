@@ -1,7 +1,8 @@
 package com.coupon.service;
 
-import com.coupon.bean.CouponDTO;
+import com.coupon.bean.CouponRequestDTO;
+import com.coupon.bean.CouponResponseDTO;
 
 public interface CouponService {
-    CouponDTO create(CouponDTO data);
+    CouponResponseDTO create(CouponRequestDTO data);
 }

@@ -1,12 +1,9 @@
 package com.coupon.user.bean;
 
-import com.coupon.user.bean.User;
-
 public class AccessToken {
     private Integer id;
     private Integer userId;
     private String token;
-    private String sessionId;
     private User user;
 
     public Integer getId() {
@@ -31,14 +28,6 @@ public class AccessToken {
 
     public void setToken(final String token) {
         this.token = token;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(final String sessionId) {
-        this.sessionId = sessionId;
     }
 
     public User getUser() {

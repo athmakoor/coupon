@@ -1,16 +1,17 @@
 package com.coupon.bean.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.coupon.utils.UTCDateTimeConverter;
 
 @Entity
 @Table(name = "referral_code_user_mapping")
@@ -32,8 +33,8 @@ public class ReferralCodeUserMappingEntity implements Serializable {
     private String userReferrerCode;
 
     @Column(name="created_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime createdOn;
 
     public Integer getId() {
         return id;
@@ -67,11 +68,11 @@ public class ReferralCodeUserMappingEntity implements Serializable {
         this.userReferrerCode = userReferrerCode;
     }
 
-    public Date getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Date createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 }

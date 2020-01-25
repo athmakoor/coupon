@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 import com.coupon.exceptions.ResourceNotFoundException;
 import com.coupon.service.mapper.ServiceMapper;
 import com.coupon.user.bean.AccessToken;
+import com.coupon.user.bean.User;
 import com.coupon.user.bean.jpa.AccessTokenEntity;
+import com.coupon.user.bean.jpa.UserEntity;
 import com.coupon.user.repository.AccessTokenRepository;
 import com.coupon.user.service.AccessTokenService;
+import com.coupon.user.service.UserService;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
@@ -24,9 +27,22 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     private AccessTokenRepository accessTokenRepository;
     @Resource
     private ServiceMapper<AccessToken, AccessTokenEntity> accessTokenServiceMapper;
+    @Resource
+    private UserService userService;
+
     @Override
     public AccessToken save(AccessToken accessToken) {
-        return null;
+        AccessTokenEntity accessTokenEntity;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(accessToken.getUserId());
+
+        accessTokenEntity = new AccessTokenEntity();
+        accessTokenEntity.setToken(accessToken.getToken());
+        accessTokenEntity.setUserEntity(userEntity);
+        accessTokenEntity = accessTokenRepository.save(accessTokenEntity);
+        accessToken.setId(accessTokenEntity.getId());
+
+        return accessToken;
     }
 
     @Override
@@ -38,13 +54,20 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         }
 
         AccessToken accessToken = accessTokenServiceMapper.mapEntityToDTO(optionalAccessToken.get(), AccessToken.class);
+        accessToken.setUserId(optionalAccessToken.get().getUserEntity().getId());
 
         return accessToken;
     }
 
     @Override
     public AccessToken findWithUserByToken(String token) {
-        return null;
+        AccessToken accessToken = this.findByToken(token);
+
+        User user = this.userService.findUserWithRolesById(accessToken.getUserId());
+
+        accessToken.setUser(user);
+
+        return accessToken;
     }
 
     @Override

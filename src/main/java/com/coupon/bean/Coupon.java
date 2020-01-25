@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.coupon.bean.CartRequest;
 import com.coupon.bean.jpa.CouponCodeLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponDescriptionLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponEntity;

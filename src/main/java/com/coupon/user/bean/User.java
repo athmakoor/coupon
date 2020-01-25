@@ -1,16 +1,11 @@
 package com.coupon.user.bean;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.coupon.user.bean.Role;
 
 public class User implements Serializable {
 
@@ -41,7 +36,7 @@ public class User implements Serializable {
     @NotNull
     private Boolean isActive = true;
 
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public Integer getId() {
         return this.id;

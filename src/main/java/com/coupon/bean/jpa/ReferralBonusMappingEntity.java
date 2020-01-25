@@ -1,9 +1,10 @@
 package com.coupon.bean.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,11 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.coupon.constants.ReferralCouponType;
 import com.coupon.constants.ReferralUserType;
+import com.coupon.utils.UTCDateTimeConverter;
 
 @Entity
 @Table(name = "referral_bonus_mapping")
@@ -51,8 +51,8 @@ public class ReferralBonusMappingEntity implements Serializable {
     private Double maxDiscount;
 
     @Column(name="created_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime createdOn;
 
     public Integer getId() {
         return id;
@@ -110,11 +110,11 @@ public class ReferralBonusMappingEntity implements Serializable {
         this.maxDiscount = maxDiscount;
     }
 
-    public Date getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Date createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 }

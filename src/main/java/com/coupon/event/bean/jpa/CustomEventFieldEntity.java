@@ -1,9 +1,10 @@
 package com.coupon.event.bean.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,11 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.coupon.event.constants.EventStatus;
 import com.coupon.event.constants.EventType;
+import com.coupon.utils.UTCDateTimeConverter;
 
 @Entity
 @Table(name = "custom_event_fields")
@@ -48,8 +48,8 @@ public class CustomEventFieldEntity implements Serializable {
     private Boolean mandatory;
 
     @Column(name="inserted_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insertedOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime insertedOn;
 
     public Integer getId() {
         return id;
@@ -107,11 +107,11 @@ public class CustomEventFieldEntity implements Serializable {
         this.mandatory = mandatory;
     }
 
-    public Date getInsertedOn() {
+    public ZonedDateTime getInsertedOn() {
         return insertedOn;
     }
 
-    public void setInsertedOn(Date insertedOn) {
+    public void setInsertedOn(ZonedDateTime insertedOn) {
         this.insertedOn = insertedOn;
     }
 }

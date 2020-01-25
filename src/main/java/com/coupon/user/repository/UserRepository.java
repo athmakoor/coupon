@@ -8,4 +8,6 @@ import com.coupon.user.bean.jpa.UserEntity;
 
 public interface UserRepository extends PagingAndSortingRepository<UserEntity, Integer> {
     Optional<UserEntity> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

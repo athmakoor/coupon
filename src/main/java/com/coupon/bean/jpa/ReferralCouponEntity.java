@@ -1,18 +1,19 @@
 package com.coupon.bean.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.coupon.utils.UTCDateTimeConverter;
 
 @Entity
 @Table(name = "referral_coupon")
@@ -28,16 +29,16 @@ public class ReferralCouponEntity implements Serializable {
     private String description;
 
     @Column(name="created_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime createdOn;
 
     @Column(name="started_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startedOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime startedOn;
 
     @Column(name="closed_on")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date closedOn;
+    @Convert(converter = UTCDateTimeConverter.class)
+    private ZonedDateTime closedOn;
 
     @Column(name="active")
     private Boolean active = true;
@@ -67,27 +68,27 @@ public class ReferralCouponEntity implements Serializable {
         this.description = description;
     }
 
-    public Date getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Date createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
-    public Date getStartedOn() {
+    public ZonedDateTime getStartedOn() {
         return startedOn;
     }
 
-    public void setStartedOn(Date startedOn) {
+    public void setStartedOn(ZonedDateTime startedOn) {
         this.startedOn = startedOn;
     }
 
-    public Date getClosedOn() {
+    public ZonedDateTime getClosedOn() {
         return closedOn;
     }
 
-    public void setClosedOn(Date closedOn) {
+    public void setClosedOn(ZonedDateTime closedOn) {
         this.closedOn = closedOn;
     }
 

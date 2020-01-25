@@ -1,7 +1,6 @@
 package com.coupon.service.impl;
 
 import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +13,7 @@ import com.coupon.bean.CreateUserResponse;
 import com.coupon.bean.jpa.ReferralCodeUserMappingEntity;
 import com.coupon.repository.ReferralCodeUserMappingRepository;
 import com.coupon.service.EndUserService;
+import com.coupon.utils.TimeUtil;
 
 @Service
 public class EndUserServiceImpl implements EndUserService {
@@ -51,7 +51,7 @@ public class EndUserServiceImpl implements EndUserService {
         entity.setUserId(requestBody.getUser_id());
         entity.setReferrerCode(requestBody.getReferral_code());
         entity.setUserReferrerCode(createReferralCode());
-        entity.setCreatedOn(new Date());
+        entity.setCreatedOn(TimeUtil.getCurrentUTCTime());
 
         ReferralCodeUserMappingEntity savedEntity = referralCodeUserMappingRepository.save(entity);
 

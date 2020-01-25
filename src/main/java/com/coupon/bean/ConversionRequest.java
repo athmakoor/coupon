@@ -1,7 +1,6 @@
 package com.coupon.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class ConversionRequest implements Serializable {
     private String txn_id;

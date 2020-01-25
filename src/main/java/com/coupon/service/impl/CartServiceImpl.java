@@ -1,9 +1,8 @@
 package com.coupon.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import com.coupon.repository.RuleCalendarMappingRepository;
 import com.coupon.repository.RuleCategoryMappingRepository;
 import com.coupon.repository.RuleOfferMappingRepository;
 import com.coupon.service.CartService;
+import com.coupon.utils.TimeUtil;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -101,7 +101,7 @@ public class CartServiceImpl implements CartService {
         cartDataEntity.setTxnId(cartRequest.getTxn_id());
         cartDataEntity.setUserId(cartRequest.getUser_data().getUser_id());
         cartDataEntity.setInvoiceAmount(cartRequest.getTotalCartValue());
-        cartDataEntity.setCreatedOn(new Date());
+        cartDataEntity.setCreatedOn(TimeUtil.getCurrentUTCTime());
 
         CartDataEntity savedCartDataEntity = cartDataRepository.save(cartDataEntity);
 
@@ -140,7 +140,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private List<Referral> getReferrals(CartRequest cartRequest) {
-        Date now = new Date();
+        ZonedDateTime now = TimeUtil.getCurrentUTCTime();
         List<Referral> referrals = new ArrayList<>();
         List<ReferralCodeUserMappingEntity> referralCodeUserMappingEntityList = referralCodeUserMappingRepository.findByUserId(cartRequest.getUser_data().getUser_id());
 
@@ -162,7 +162,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private List<Coupon> getCoupons(CartRequest cartRequest) {
-        Date now = new Date();
+        ZonedDateTime now = TimeUtil.getCurrentUTCTime();
         Iterable<CouponEntity> allCoupons = couponRepository.findAllValid(now, cartRequest.getTotalCartValue(), 0.7);
 
         Map<Integer, CouponEntity> couponIdCouponMap = new HashMap<>();
@@ -393,18 +393,16 @@ public class CartServiceImpl implements CartService {
 
     private Boolean validateCalendarRule(List<RuleCalendarMappingEntity> ruleCalendarMappingEntities) {
         Relation relation = ruleCalendarMappingEntities.get(0).getRelation();
-        Date now = new Date();
+        ZonedDateTime now = TimeUtil.getCurrentUTCTime();
         Boolean valid = false, tempValid, previousValid = true;
         CalenderType calenderType;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
 
-        Integer date = calendar.get(Calendar.DATE);
-        Integer hour = calendar.get(Calendar.HOUR_OF_DAY);
-        Integer minute = calendar.get(Calendar.MINUTE);
-        Integer second = calendar.get(Calendar.SECOND);
-        Integer week = calendar.get(Calendar.DAY_OF_WEEK);
-        Integer month = calendar.get(Calendar.MONTH);
+        Integer date = now.getDayOfMonth();
+        Integer hour = now.getHour();
+        Integer minute = now.getMinute();
+        Integer second = now.getSecond();
+        Integer week = now.getDayOfWeek().getValue();
+        Integer month = now.getMonthValue();
         Integer currentHrMs = convertHourStringToMs("" + hour + ":" + minute + ":" + second);
         String start, end;
         Integer startInt, endInt;
