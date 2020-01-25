@@ -13,10 +13,10 @@ import com.coupon.bean.CreateUserRequest;
 import com.coupon.bean.CreateUserResponse;
 import com.coupon.bean.jpa.ReferralCodeUserMappingEntity;
 import com.coupon.repository.ReferralCodeUserMappingRepository;
-import com.coupon.service.UserService;
+import com.coupon.service.EndUserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class EndUserServiceImpl implements EndUserService {
     @Resource
     private ReferralCodeUserMappingRepository referralCodeUserMappingRepository;
 

@@ -17,6 +17,7 @@ public class CartRequest implements Serializable {
     private List<String> fields = new ArrayList<>();
     private UserData user_data;
     private List<CartItem> cart_data = new ArrayList<>();
+    private List<CartItem> cart_after_discount = new ArrayList<>();
 
     public String getTxn_id() {
         return txn_id;
@@ -48,6 +49,20 @@ public class CartRequest implements Serializable {
 
     public void setCart_data(List<CartItem> cart_data) {
         this.cart_data = cart_data;
+    }
+
+    public List<CartItem> getCart_after_discount() {
+        return cart_after_discount;
+    }
+
+    public void setCart_after_discount(List<CartItem> cart_after_discount) {
+        this.cart_after_discount = cart_after_discount;
+    }
+
+    public void copyCartData() {
+        for (CartItem item : cart_data) {
+            this.cart_after_discount.add(item.clone());
+        }
     }
 
     public Double getTotalCartValue() {

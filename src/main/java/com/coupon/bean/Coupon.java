@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.coupon.bean.CartRequest;
 import com.coupon.bean.jpa.CouponCodeLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponDescriptionLanguageMappingEntity;
 import com.coupon.bean.jpa.CouponEntity;
@@ -18,6 +19,8 @@ public class Coupon implements Serializable {
     private Boolean is_mergeable;
     private Boolean is_manual;
     private Boolean disabled = false;
+    private String note;
+    private String offer_skus;
     @JsonIgnore
     private Integer couponId;
 
@@ -101,11 +104,27 @@ public class Coupon implements Serializable {
         this.disabled = disabled;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public Integer getCouponId() {
         return couponId;
     }
 
     public void setCouponId(Integer couponId) {
         this.couponId = couponId;
+    }
+
+    public String getOffer_skus() {
+        return offer_skus;
+    }
+
+    public void setOffer_skus(String offer_skus) {
+        this.offer_skus = offer_skus;
     }
 }

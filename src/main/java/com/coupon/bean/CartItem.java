@@ -61,4 +61,17 @@ public class CartItem implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public CartItem clone() {
+        CartItem item = new CartItem();
+
+        item.setAmount(this.getAmount());
+        item.setCategory(this.getCategory());
+        item.setItem_name(this.getItem_name());
+        item.setQuantity(this.getQuantity());
+        item.setSku(this.getSku());
+        item.setType(this.getType());
+
+        return item;
+    }
 }

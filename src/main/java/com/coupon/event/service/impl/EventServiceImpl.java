@@ -103,7 +103,7 @@ public class EventServiceImpl implements EventService {
         }
 
         if (!"error".equals(response.getStatus())) {
-            eventFieldRepository.save(eventFieldEntityList);
+            eventFieldRepository.saveAll(eventFieldEntityList);
         }
 
         return response;

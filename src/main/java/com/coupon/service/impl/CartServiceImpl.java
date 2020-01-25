@@ -71,6 +71,7 @@ public class CartServiceImpl implements CartService {
         CartResponse response = new CartResponse();
 
         saveCart(cartRequest);
+        cartRequest.copyCartData();
 
         response.setCouponsAndDiscounts(getCoupons(cartRequest));
         if (cartRequest.getFields() != null && !cartRequest.getFields().isEmpty()) {
@@ -120,7 +121,7 @@ public class CartServiceImpl implements CartService {
             cartItemEntities.add(cartItemEntity);
         }
 
-        cartItemRepository.save(cartItemEntities);
+        cartItemRepository.saveAll(cartItemEntities);
     }
 
     private Double getUserReferralBonus(String userId) {
@@ -162,7 +163,7 @@ public class CartServiceImpl implements CartService {
 
     private List<Coupon> getCoupons(CartRequest cartRequest) {
         Date now = new Date();
-        Iterable<CouponEntity> allCoupons = couponRepository.findAllValid(now, cartRequest.getTotalCartValue());
+        Iterable<CouponEntity> allCoupons = couponRepository.findAllValid(now, cartRequest.getTotalCartValue(), 0.7);
 
         Map<Integer, CouponEntity> couponIdCouponMap = new HashMap<>();
 
@@ -201,7 +202,10 @@ public class CartServiceImpl implements CartService {
         Map<String, Integer> cartSkus = cartRequest.getSkuQuantityMap();
         Map<String, Integer> skusForOffer;
         Boolean enabled;
-
+        Integer offerProductsNeeded;
+        String category;
+        Double categoryPrice, priceDifference;
+        Map<String, Double> categoryCartPriceMap = cartRequest.geCategoryCartPriceMap();
 
         for (Coupon coupon : filteredCoupons) {
             couponEntity = couponIdCouponMap.get(coupon.getCouponId());
@@ -209,12 +213,35 @@ public class CartServiceImpl implements CartService {
             enabled = true;
 
             for (RuleOfferMappingEntity offerRule : ruleOfferMappingEntities) {
-                enabled = checkOfferSkus(cartSkus, offerRule, cartRequest);
+                offerProductsNeeded = checkOfferSkus(cartSkus, offerRule, cartRequest);
 
-                if (enabled) {
+                if (offerProductsNeeded == 0) {
                     skusForOffer = removeBuySkus(cartSkus, sortSkus(cartRequest, new ArrayList<>(cartSkus.keySet())), offerRule);
                     coupon.setAmount(getBestOfferPrice(cartRequest, skusForOffer, offerRule.getOfferQuantity()));
+                } else {
+                    enabled = false;
+                    coupon.setNote("Add " + offerProductsNeeded + " or more products from the list below to avail this offer.");
+                    coupon.setOffer_skus(offerRule.getOfferSkus());
                     break;
+                }
+            }
+
+            if (enabled) {
+                for (RuleCategoryMappingEntity categoryRule : couponEntity.getRuleCategoryMappingEntities()) {
+                    category = categoryRule.getCategoryName();
+                    categoryPrice = categoryCartPriceMap.get(category);
+
+                    if (categoryPrice == null) {
+                        categoryPrice = 0.0;
+                    }
+
+                    priceDifference = couponEntity.getMinCartValue() - categoryPrice;
+
+                    if (priceDifference >= 0.0) {
+                        enabled = false;
+                        coupon.setNote("Add " + priceDifference + " or more worth of " + category + " to avail this offer.");
+                        break;
+                    }
                 }
             }
 
@@ -354,7 +381,7 @@ public class CartServiceImpl implements CartService {
 
             valid = (quantity == null ||
                     (categoryCartItemMap.get(category) != null && categoryCartItemMap.get(category).size() >= quantity));
-            valid = valid ||couponEntity.getMinCartValue() < categoryPrice;
+            valid = valid ||couponEntity.getMinCartValueToShowCoupon() < categoryPrice;
 
             if (valid) {
                 break;
@@ -479,7 +506,7 @@ public class CartServiceImpl implements CartService {
         return cartSkusCopy;
     }
 
-    private Boolean checkOfferSkus (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule, CartRequest cartRequest) {
+    private Integer checkOfferSkus (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule, CartRequest cartRequest) {
         String offerSkus = offerRule.getOfferSkus();
         String[] offerSkusSplit = offerSkus.split(",");
         List<String> offerSkuList = Arrays.asList(offerSkusSplit);
@@ -498,7 +525,7 @@ public class CartServiceImpl implements CartService {
             }
         }
 
-        return count >= offerRule.getOfferQuantity();
+        return offerRule.getOfferQuantity() - count;
     }
 
     private Boolean validateOffer (Map<String, Integer> cartSkus, RuleOfferMappingEntity offerRule) {

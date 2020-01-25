@@ -14,7 +14,7 @@ import com.coupon.bean.CreateUserRequest;
 import com.coupon.bean.CreateUserResponse;
 import com.coupon.service.CartService;
 import com.coupon.service.ConversionService;
-import com.coupon.service.UserService;
+import com.coupon.service.EndUserService;
 
 @RestController
 public class ApiController {
@@ -23,25 +23,20 @@ public class ApiController {
 	@Resource
 	private ConversionService conversionService;
 	@Resource
-	private UserService userService;
+	private EndUserService endUserService;
 
-	@PostMapping("/checkout")
+	@PostMapping("/checkoutapi")
 	CartResponse requestInfo(@RequestBody final CartRequest requestBody) {
 		return cartService.getCartResponse(requestBody);
 	}
 
-	@PostMapping("/conversion")
+	@PostMapping("/conversionapi")
 	ConversionResponse saveCart(@RequestBody final ConversionRequest requestBody) {
 		return conversionService.saveConversions(requestBody);
 	}
 
 	@PostMapping("/create-user")
 	CreateUserResponse createUser(@RequestBody final CreateUserRequest requestBody) {
-		return userService.createUser(requestBody);
-	}
-
-	@PostMapping("/coupon-details")
-	CreateUserResponse getCouponDetails(@RequestBody final CreateUserRequest requestBody) {
-		return userService.createUser(requestBody);
+		return endUserService.createUser(requestBody);
 	}
 }

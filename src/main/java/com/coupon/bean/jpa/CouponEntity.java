@@ -258,4 +258,12 @@ public class CouponEntity implements Serializable {
     public void setListOfCouponDesc(List<CouponDescriptionLanguageMappingEntity> listOfCouponDesc) {
         this.listOfCouponDesc = listOfCouponDesc;
     }
+
+    public Double getMinCartValueToShowCoupon() {
+        if (this.minCartValue == null) {
+            return 0.0;
+        }
+
+        return this.minCartValue * 0.2;
+    }
 }
