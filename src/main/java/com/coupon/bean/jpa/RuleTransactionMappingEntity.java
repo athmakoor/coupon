@@ -30,9 +30,6 @@ public class RuleTransactionMappingEntity implements Serializable {
     @JoinColumn(name = "coupon_id_ref", referencedColumnName = "id")
     private CouponEntity couponEntity;
 
-    @Column(name = "event_code")
-    private String eventCode;
-
     @Column(name = "cal_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private CalenderType calType;
@@ -64,14 +61,6 @@ public class RuleTransactionMappingEntity implements Serializable {
 
     public void setCouponEntity(CouponEntity couponEntity) {
         this.couponEntity = couponEntity;
-    }
-
-    public String getEventCode() {
-        return eventCode;
-    }
-
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
     }
 
     public CalenderType getCalType() {

@@ -25,9 +25,6 @@ public class RuleTransactionFieldsMappingEntity implements Serializable {
     @JoinColumn(name = "id_ref", referencedColumnName = "id")
     private RuleTransactionMappingEntity ruleTransactionMappingEntity;
 
-    @Column(name = "event_code")
-    private String eventCode;
-
     @Column(name = "field_name")
     private String fieldName;
 
@@ -48,14 +45,6 @@ public class RuleTransactionFieldsMappingEntity implements Serializable {
 
     public void setRuleTransactionMappingEntity(RuleTransactionMappingEntity ruleTransactionMappingEntity) {
         this.ruleTransactionMappingEntity = ruleTransactionMappingEntity;
-    }
-
-    public String getEventCode() {
-        return eventCode;
-    }
-
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
     }
 
     public String getFieldName() {
